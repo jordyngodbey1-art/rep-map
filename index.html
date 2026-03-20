@@ -1,55 +1,125 @@
-// 1. Link to State Shapes
-const statesDataUrl = 'https://raw.githubusercontent.com/PublicaMundi/MappingPHL/master/data/us_states.json';
-
-// 2. Load and Process Data
-Promise.all([
-    fetch('./reps.json').then(res => res.json()),
-    fetch(statesDataUrl).then(res => res.json())
-]).then(([reps, statesData]) => {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KARNAK | Sales Rep Locator</title>
     
-    // Group reps by state: { "Florida": ["Rep A", "Rep B"], "Texas": ["Rep C"] }
-    const stateGroups = {};
-    reps.forEach(r => {
-        if (!stateGroups[r.state]) stateGroups[r.state] = [];
-        stateGroups[r.state].push(r.name);
-    });
-
-    // 3. Add States to Map
-    L.geoJson(statesData, {
-        style: function(feature) {
-            const count = (stateGroups[feature.properties.name] || []).length;
-            return {
-                fillColor: count > 5 ? '#003366' : count > 2 ? '#004a99' : count > 0 ? '#4da3ff' : '#e0e0e0',
-                weight: 1.5,
-                opacity: 1,
-                color: 'white',
-                fillOpacity: 0.75
-            };
-        },
-        onEachFeature: function(feature, layer) {
-            const stateName = feature.properties.name;
-            const repsInState = stateGroups[stateName] || [];
-            
-            // Create a clean list for the popup
-            let repListHtml = repsInState.length > 0 
-                ? repsInState.map(name => `<li style="padding:4px 0; border-bottom:1px solid #eee;">${name}</li>`).join('')
-                : "<li>No Rep Assigned</li>";
-
-            layer.bindPopup(`
-                <div style="min-width:180px;">
-                    <h3 style="margin:0 0 10px 0; color:#004a99; border-bottom:2px solid #004a99;">${stateName}</h3>
-                    <p style="font-size:12px; margin-bottom:5px; color:#666;"><b>${repsInState.length}</b> Reps Found:</p>
-                    <ul style="list-style:none; padding:0; margin:0; font-size:13px;">
-                        ${repListHtml}
-                    </ul>
-                </div>
-            `);
-
-            // Hover effects
-            layer.on({
-                mouseover: (e) => { e.target.setStyle({ fillOpacity: 0.9, weight: 3 }); },
-                mouseout: (e) => { e.target.setStyle({ fillOpacity: 0.75, weight: 1.5 }); }
-            });
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        :root {
+            --karnak-blue: #004a99;
+            --karnak-dark: #333;
+            --karnak-light-blue: #4da3ff;
         }
+
+        body { 
+            margin: 0; 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Header Styling */
+        .header {
+            background: white;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .header h1 { 
+            margin: 0; 
+            font-size: 1.4rem; 
+            color: var(--karnak-blue);
+            letter-spacing: 1px;
+        }
+
+        /* Map Area */
+        #map { flex-grow: 1; width: 100%; }
+
+        /* Popup Styling */
+        .popup-container { min-width: 180px; }
+        .popup-header { 
+            border-bottom: 2px solid var(--karnak-blue); 
+            margin-bottom: 8px; 
+            padding-bottom: 4px;
+            font-weight: bold;
+            color: var(--karnak-blue);
+            font-size: 1.1rem;
+        }
+        .rep-list { padding: 0; margin: 0; list-style: none; }
+        .rep-item { 
+            padding: 6px 0; 
+            border-bottom: 1px solid #eee; 
+            font-size: 0.9rem;
+        }
+        .rep-item:last-child { border-bottom: none; }
+
+        /* Footer */
+        .footer {
+            background: var(--karnak-dark);
+            color: white;
+            text-align: center;
+            padding: 8px;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>KARNAK <span style="font-weight:300; color:#666;">| REP LOCATOR</span></h1>
+    <div style="font-size: 0.8rem; color: #666;">Click a state to view representatives</div>
+</div>
+
+<div id="map"></div>
+
+<div class="footer">
+    &copy; 2026 KARNAK Corporation. All Rights Reserved.
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    // 1. Initialize the Map centered on USA
+    const map = L.map('map', {
+        minZoom: 4,
+        maxBounds: [[24, -127], [50, -65]]
+    }).setView([37.8, -96], 4);
+
+    // 2. Add a clean Map Tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap'
     }).addTo(map);
-});
+
+    // 3. URLs for Data
+    const repsUrl = './reps.json';
+    const statesUrl = 'https://raw.githubusercontent.com/PublicaMundi/MappingPHL/master/data/us_states.json';
+
+    // 4. Load both Reps and State Shapes
+    Promise.all([
+        fetch(repsUrl).then(res => res.json()),
+        fetch(statesUrl).then(res => res.json())
+    ]).then(([reps, statesData]) => {
+        
+        // Group the reps by state
+        const stateGroups = {};
+        reps.forEach(rep => {
+            if (rep.state) {
+                if (!stateGroups[rep.state]) stateGroups[rep.state] = [];
+                stateGroups[rep.state].push(rep.name);
+            }
+        });
+
+        // 5. Add the interactive state layer
+        L.geoJson(statesData, {
+            style: function(feature) {
+                const stateName = feature.properties.name;
+                const repCount =
