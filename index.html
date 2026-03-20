@@ -1,158 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karnak | Sales Rep Locator</title>
+// 1. Link to State Shapes
+const statesDataUrl = 'https://raw.githubusercontent.com/PublicaMundi/MappingPHL/master/data/us_states.json';
+
+// 2. Load and Process Data
+Promise.all([
+    fetch('./reps.json').then(res => res.json()),
+    fetch(statesDataUrl).then(res => res.json())
+]).then(([reps, statesData]) => {
     
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
-    <style>
-        :root {
-            --karnak-blue: #004a99; /* Adjust to match actual Karnak blue */
-            --karnak-dark: #333;
+    // Group reps by state: { "Florida": ["Rep A", "Rep B"], "Texas": ["Rep C"] }
+    const stateGroups = {};
+    reps.forEach(r => {
+        if (!stateGroups[r.state]) stateGroups[r.state] = [];
+        stateGroups[r.state].push(r.name);
+    });
+
+    // 3. Add States to Map
+    L.geoJson(statesData, {
+        style: function(feature) {
+            const count = (stateGroups[feature.properties.name] || []).length;
+            return {
+                fillColor: count > 5 ? '#003366' : count > 2 ? '#004a99' : count > 0 ? '#4da3ff' : '#e0e0e0',
+                weight: 1.5,
+                opacity: 1,
+                color: 'white',
+                fillOpacity: 0.75
+            };
+        },
+        onEachFeature: function(feature, layer) {
+            const stateName = feature.properties.name;
+            const repsInState = stateGroups[stateName] || [];
+            
+            // Create a clean list for the popup
+            let repListHtml = repsInState.length > 0 
+                ? repsInState.map(name => `<li style="padding:4px 0; border-bottom:1px solid #eee;">${name}</li>`).join('')
+                : "<li>No Rep Assigned</li>";
+
+            layer.bindPopup(`
+                <div style="min-width:180px;">
+                    <h3 style="margin:0 0 10px 0; color:#004a99; border-bottom:2px solid #004a99;">${stateName}</h3>
+                    <p style="font-size:12px; margin-bottom:5px; color:#666;"><b>${repsInState.length}</b> Reps Found:</p>
+                    <ul style="list-style:none; padding:0; margin:0; font-size:13px;">
+                        ${repListHtml}
+                    </ul>
+                </div>
+            `);
+
+            // Hover effects
+            layer.on({
+                mouseover: (e) => { e.target.setStyle({ fillOpacity: 0.9, weight: 3 }); },
+                mouseout: (e) => { e.target.setStyle({ fillOpacity: 0.75, weight: 1.5 }); }
+            });
         }
-
-        body { 
-            margin: 0; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #f4f4f4;
-        }
-
-        /* Modern Header */
-        .header {
-            background: white;
-            padding: 15px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            z-index: 1000;
-            position: relative;
-        }
-
-        .header h1 { 
-            margin: 0; 
-            font-size: 1.5rem; 
-            color: var(--karnak-blue);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Professional Search Bar */
-        .search-container {
-            display: flex;
-            gap: 0;
-            background: white;
-            border-radius: 50px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border: 1px solid #ddd;
-        }
-
-        input { 
-            padding: 12px 20px; 
-            width: 200px; 
-            border: none; 
-            outline: none;
-            font-size: 14px;
-        }
-
-        button { 
-            padding: 12px 25px; 
-            cursor: pointer; 
-            background: var(--karnak-blue); 
-            color: white; 
-            border: none; 
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        button:hover { background: #003366; }
-
-        /* Map Container */
-        #map { height: calc(100vh - 130px); width: 100%; }
-
-        /* Popup Styling */
-        .leaflet-popup-content-wrapper {
-            border-radius: 8px;
-            padding: 5px;
-        }
-        .leaflet-popup-content b {
-            color: var(--karnak-blue);
-            font-size: 1.1rem;
-        }
-
-        /* Professional Footer */
-        .footer {
-            background: var(--karnak-dark);
-            color: white;
-            text-align: center;
-            padding: 10px;
-            font-size: 12px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-    </style>
-</head>
-<body>
-
-<div class="header">
-    <h1>KARNAK <span style="font-weight: 300; color: #666;">| Rep Locator</span></h1>
-    <div class="search-container">
-        <input type="text" id="zipSearch" placeholder="Enter ZIP Code...">
-        <button onclick="searchZip()">FIND REPS</button>
-    </div>
-</div>
-
-<div id="map"></div>
-
-<div class="footer">
-    &copy; 2026 KARNAK Corporation. All Rights Reserved.
-</div>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<script>
-    // Initialize map restricted to USA bounds
-    const map = L.map('map', {
-        minZoom: 4,
-        maxBounds: [[24, -125], [50, -65]]
-    }).setView([37.8, -96], 4);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap'
     }).addTo(map);
-
-    // Load Data
-    fetch('./reps.json')
-        .then(res => res.json())
-        .then(data => {
-            data.forEach(rep => {
-                if (rep.lat && rep.lng) {
-                    L.marker([rep.lat, rep.lng])
-                     .addTo(map)
-                     .bindPopup(`<b>${rep.name}</b><br>Karnak Authorized Representative`);
-                }
-            });
-        });
-
-    function searchZip() {
-        const query = document.getElementById('zipSearch').value;
-        if (!query) return;
-        fetch(`https://nominatim.openstreetmap.org/search?format=json&postalcode=${query}&country=US`)
-            .then(res => res.json())
-            .then(results => {
-                if (results.length > 0) {
-                    map.flyTo([results[0].lat, results[0].lon], 10);
-                } else {
-                    alert("Location not found.");
-                }
-            });
-    }
-</script>
-
-</body>
-</html>
+});
