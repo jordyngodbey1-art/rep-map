@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Rep Locator</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { margin: 0; font-family: sans-serif; }
+        #map { height: 80vh; width: 100%; }
+        .search-container {
+            padding: 15px;
+            background: #f8f9fa;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        input { padding: 8px; width: 250px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 8px 15px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+
+<div class="search-container">
+    <input type="text" id="zipSearch" placeholder="Enter ZIP Code (e.g. 90210)">
+    <button onclick="searchZip()">Find Reps</button>
+</div>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    // 1. Initialize the map centered on the USA
+    const map = L.map('map').setView([37.8, -96], 4);
+
+    // 2. Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // 3. Load Rep Data from JSON
+    fetch('reps.json')
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(rep => {
+                const marker = L.marker([rep.lat, rep.lng]).addTo(map);
+                marker.bindPopup(`
+                    <strong>${rep.name}</strong><br>
+                    Region: ${rep.region}<br>
+                    Email: <a href="mailto:${rep.email}">${rep.email}</a><br>
+                    Phone: ${rep.phone}
+                `);
+            });
+        })
+        .catch(err => console.error('Error loading rep data:', err));
+
+    // 4. ZIP Code Search Function
+    function searchZip() {
+        const query = document.getElementById('zipSearch').value;
+        if (!query) return;
+
+        // Use free Nominatim API to get coordinates for the ZIP
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&postalcode=${query}&country=US`)
+            .then(res => res.json())
+            .then(results => {
+                if (results.length > 0) {
+                    const { lat, lon } = results[0];
+                    map.flyTo([lat, lon], 10); // Smooth zoom to the ZIP area
+                } else {
+                    alert("ZIP Code not found. Please try another.");
+                }
+            });
+    }
+</script>
+
+</body>
+</html>
