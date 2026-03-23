@@ -8,54 +8,71 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
-        :root { --karnak-red: #ce2029; --karnak-light: #fff1f1; }
+        :root { 
+            --karnak-red: #ce2029; 
+            --karnak-light: #fff1f1; 
+        }
+        
         body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #ffffff; overflow: hidden; }
         
-        /* Header & Search */
+        /* Centered Branding Header */
         #header {
-            background: white; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 4px solid var(--karnak-red); box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 1000;
+            background: white; 
+            padding: 15px 20px; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center;
+            border-bottom: 5px solid var(--karnak-red); 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+            z-index: 1000;
         }
-        .logo-container { display: flex; align-items: center; gap: 15px; }
-        .logo-container img { height: 35px; width: auto; }
-        
-        .search-box {
-            position: relative; width: 250px;
-        }
-        #search-input {
-            width: 100%; padding: 8px 12px; border: 2px solid #ddd; border-radius: 20px;
-            font-size: 13px; outline: none; transition: 0.3s;
-        }
-        #search-input:focus { border-color: var(--karnak-red); }
 
-        /* Map & Labels */
-        #map { height: calc(100vh - 68px); width: 100%; background: #ffffff; }
+        .logo-text { 
+            font-size: 2rem; 
+            font-weight: 900; 
+            color: var(--karnak-red); 
+            letter-spacing: 4px; 
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .sub-text {
+            font-size: 0.8rem;
+            color: #666;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: -5px;
+        }
+
+        /* Map & Solid Labels */
+        #map { height: calc(100vh - 85px); width: 100%; background: #ffffff; }
+        
         .state-label {
             background: transparent !important; border: none !important; box-shadow: none !important;
             color: white !important; font-weight: 900 !important; font-size: 13px !important;
             text-shadow: 1px 1px 3px #000; pointer-events: none;
         }
 
-        /* Popups */
-        .k-popup { min-width: 220px; max-height: 300px; overflow-y: auto; }
-        .k-popup h3 { color: var(--karnak-red); border-bottom: 2px solid var(--karnak-red); margin: 0 0 8px 0; font-size: 1.1rem; }
+        /* Professional Popups */
+        .k-popup { min-width: 220px; max-height: 300px; overflow-y: auto; padding-right: 5px; }
+        .k-popup h3 { color: var(--karnak-red); border-bottom: 2px solid var(--karnak-red); margin: 0 0 10px 0; font-size: 1.2rem; }
+        
         .reg-label {
             font-weight: bold; background: var(--karnak-light); color: var(--karnak-red);
-            padding: 4px 6px; margin-top: 10px; font-size: 10px; text-transform: uppercase;
-            border-radius: 2px; border-left: 3px solid var(--karnak-red);
+            padding: 4px 8px; margin-top: 12px; font-size: 10px; text-transform: uppercase;
+            border-radius: 2px; border-left: 4px solid var(--karnak-red);
         }
-        .rep-names { padding-left: 18px; margin: 5px 0; font-size: 13px; color: #222; }
+
+        .rep-names { padding-left: 18px; margin: 8px 0; font-size: 13px; color: #222; list-style-type: square; }
+        .rep-names li { margin-bottom: 4px; font-weight: 600; }
     </style>
 </head>
 <body>
 
 <div id="header">
-    <div class="logo-container">
-        <img src="https://www.karnakcorp.com/wp-content/uploads/2021/04/Karnak-Logo-Red-RGB.png" alt="Karnak Logo">
-    </div>
-    <div class="search-box">
-        <input type="text" id="search-input" placeholder="Search Rep or State...">
-    </div>
+    <div class="logo-text">KARNAK</div>
+    <div class="sub-text">National Territory Locator</div>
 </div>
 
 <div id="map"></div>
@@ -63,79 +80,11 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
+    // Initialize Map on USA
     const map = L.map('map').setView([37.8, -96], 4.5);
-    let stateLayer;
 
+    // Use a clean, no-label base map so our custom abbreviations stand out
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png').addTo(map);
 
     const stateAbbr = {
-        'Alabama': 'AL', 'Alaska': 'AK', 'Arizona': 'AZ', 'Arkansas': 'AR', 'California': 'CA', 'Colorado': 'CO', 'Connecticut': 'CT', 'Delaware': 'DE', 'Florida': 'FL', 'Georgia': 'GA', 'Hawaii': 'HI', 'Idaho': 'ID', 'Illinois': 'IL', 'Indiana': 'IN', 'Iowa': 'IA', 'Kansas': 'KS', 'Kentucky': 'KY', 'Louisiana': 'LA', 'Maine': 'ME', 'Maryland': 'MD', 'Massachusetts': 'MA', 'Michigan': 'MI', 'Minnesota': 'MN', 'Mississippi': 'MS', 'Missouri': 'MO', 'Montana': 'MT', 'Nebraska': 'NE', 'Nevada': 'NV', 'New Hampshire': 'NH', 'New Jersey': 'NJ', 'New Mexico': 'NM', 'New York': 'NY', 'North Carolina': 'NC', 'North Dakota': 'ND', 'Ohio': 'OH', 'Oklahoma': 'OK', 'Oregon': 'OR', 'Pennsylvania': 'PA', 'Rhode Island': 'RI', 'South Carolina': 'SC', 'South Dakota': 'SD', 'Tennessee': 'TN', 'Texas': 'TX', 'Utah': 'UT', 'Vermont': 'VT', 'Virginia': 'VA', 'Washington': 'WA', 'West Virginia': 'WV', 'Wisconsin': 'WI', 'Wyoming': 'WY'
-    };
-
-    async function loadKarnakMap() {
-        try {
-            const [repData, shapeData] = await Promise.all([ fetch('./reps.json'), fetch('./states.json') ]);
-            const reps = await repData.json();
-            const states = await shapeData.json();
-
-            const territoryGroups = {};
-            reps.forEach(r => {
-                if (!territoryGroups[r.state]) territoryGroups[r.state] = {};
-                const reg = r.region || "General";
-                if (!territoryGroups[r.state][reg]) territoryGroups[r.state][reg] = [];
-                territoryGroups[r.state][reg].push(r.name);
-            });
-
-            stateLayer = L.geoJson(states, {
-                style: (f) => ({
-                    fillColor: territoryGroups[f.properties.name] ? '#ce2029' : '#e0e0e0',
-                    weight: 1.5, color: '#000', fillOpacity: 1
-                }),
-                onEachFeature: (f, l) => {
-                    const fullName = f.properties.name.trim();
-                    const abbr = stateAbbr[fullName] || fullName;
-                    
-                    // Fixed Abbreviation Logic
-                    l.bindTooltip(abbr, { permanent: true, direction: 'center', className: 'state-label' }).openTooltip();
-
-                    let html = `<div class="k-popup"><h3>${fullName}</h3>`;
-                    if (territoryGroups[fullName]) {
-                        Object.entries(territoryGroups[fullName]).forEach(([reg, names]) => {
-                            html += `<div class="reg-label">${reg}</div><ul class="rep-names">`;
-                            names.forEach(n => html += `<li>${n}</li>`);
-                            html += `</ul>`;
-                        });
-                    }
-                    l.bindPopup(html);
-                    
-                    l.on({
-                        mouseover: (e) => e.target.setStyle({ fillOpacity: 0.9, weight: 3 }),
-                        mouseout: (e) => e.target.setStyle({ fillOpacity: 1, weight: 1.5 }),
-                        click: (e) => map.fitBounds(e.target.getBounds())
-                    });
-                }
-            }).addTo(map);
-
-            // SEARCH LOGIC
-            document.getElementById('search-input').addEventListener('input', function(e) {
-                const term = e.target.value.toLowerCase();
-                stateLayer.eachLayer(layer => {
-                    const stateName = layer.feature.properties.name.toLowerCase();
-                    const hasRep = (territoryGroups[layer.feature.properties.name] || {});
-                    const repMatch = Object.values(hasRep).flat().some(name => name.toLowerCase().includes(term));
-
-                    if (stateName.includes(term) || repMatch) {
-                        layer.setStyle({ fillOpacity: 1, weight: 3, color: '#ce2029' });
-                    } else {
-                        layer.setStyle({ fillOpacity: 0.2, weight: 1, color: '#ccc' });
-                    }
-                });
-            });
-
-        } catch (e) { console.error(e); }
-    }
-    loadKarnakMap();
-</script>
-
-</body>
-</html>
+        'Alabama': 'AL', 'Alaska': 'AK', 'Arizona': 'AZ', 'Arkansas': 'AR', 'California': 'CA', 'Colorado': 'CO', 'Connecticut': 'CT', 'Delaware': 'DE', 'Florida': 'FL', 'Georgia': 'GA', 'Hawaii': 'HI', 'Idaho': 'ID', 'Illinois': 'IL', 'Indiana': 'IN', 'Iowa': 'IA', 'Kansas': 'KS', 'Kentucky': 'KY', 'Louisiana': 'LA', 'Maine': 'ME', 'Maryland': 'MD', 'Massachusetts': 'MA', 'Michigan': 'MI', 'Minnesota': 'MN', 'Mississippi': 'MS', 'Missouri': 'MO', 'Montana': 'MT', 'Nebraska': 'NE', 'Nevada': 'NV', 'New Hampshire': 'NH', 'New
