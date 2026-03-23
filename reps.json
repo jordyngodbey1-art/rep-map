@@ -321,7 +321,7 @@
     "state": "Texas"
   },
   {
-    "name": "247  SHERMACH SALES LLC",
+    "name": "247 SHERMACH SALES LLC",
     "lat": 44.751113,
     "lng": -93.367975,
     "state": "Minnesota"
@@ -516,5 +516,11 @@
     "lat": 45.1960403,
     "lng": -63.1653789,
     "state": "Nova Scotia"
+  },
+  {
+    "name": "259 DJS ENTERPRISES INC.",
+    "lat": 42.8501191,
+    "lng": -106.325138,
+    "state": "Wyoming"
   }
 ]
