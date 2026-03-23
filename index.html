@@ -1,58 +1,140 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Karnak Map Debug</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KARNAK | Sales Rep Map</title>
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
     <style>
-        body { margin: 0; padding: 0; font-family: sans-serif; }
-        #map { height: 100vh; width: 100%; background: #eee; }
-        #status-box { 
-            position: absolute; top: 10px; right: 10px; z-index: 9999;
-            background: white; padding: 15px; border: 2px solid #004a99;
-            border-radius: 8px; max-width: 250px; font-size: 13px;
+        :root { --karnak-blue: #004a99; --karnak-dark: #222; }
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; }
+        
+        .header {
+            background: white; padding: 15px 25px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000; position: relative;
+        }
+        .header h1 { margin: 0; font-size: 1.4rem; color: var(--karnak-blue); letter-spacing: 1px; }
+
+        #map { height: calc(100vh - 110px); width: 100%; background: #aad3df; }
+
+        /* Professional Popup Styling */
+        .leaflet-popup-content-wrapper { border-radius: 4px; padding: 5px; }
+        .state-title { 
+            border-bottom: 2px solid var(--karnak-blue); 
+            margin-bottom: 8px; font-weight: bold; color: var(--karnak-blue); font-size: 1.1rem;
+        }
+        .rep-list { padding: 0; margin: 0; list-style: none; max-height: 200px; overflow-y: auto; }
+        .rep-item { padding: 5px 0; border-bottom: 1px solid #eee; font-size: 0.9rem; color: #444; }
+        .rep-item:last-child { border-bottom: none; }
+
+        .footer {
+            background: var(--karnak-dark); color: white;
+            text-align: center; padding: 10px; font-size: 0.75rem;
+            position: fixed; bottom: 0; width: 100%; z-index: 1000;
         }
     </style>
 </head>
 <body>
 
-<div id="status-box">
-    <b>Karnak Map Status:</b><br>
-    <span id="load-status">Checking data...</span>
+<div class="header">
+    <h1>KARNAK <span style="font-weight:300; color:#666;">| REP LOCATOR</span></h1>
+    <div style="font-size: 0.85rem; color: #666;">Select a state to view reps</div>
 </div>
+
 <div id="map"></div>
+
+<div class="footer">
+    &copy; 2026 KARNAK Corporation. All Rights Reserved.
+</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-    const status = document.getElementById('load-status');
-    
-    // 1. Initialize Map
-    const map = L.map('map').setView([37.8, -96], 4);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    // 1. Setup the Map
+    const map = L.map('map', {
+        minZoom: 4,
+        maxZoom: 7,
+        maxBounds: [[24, -127], [50, -65]]
+    }).setView([39.8, -98.5], 4);
 
-    // 2. Try to load your JSON
-    fetch('./reps.json')
-        .then(res => {
-            if (!res.ok) throw new Error("Could not find reps.json file");
-            return res.json();
-        })
-        .then(data => {
-            status.innerHTML = "✅ Found " + data.length + " reps.<br>Map should be visible.";
-            
-            data.forEach(rep => {
-                if (rep.lat && rep.lng) {
-                    L.marker([rep.lat, rep.lng])
-                     .bindPopup("<b>" + rep.name + "</b><br>" + rep.state)
-                     .addTo(map);
-                }
-            });
-        })
-        .catch(err => {
-            status.style.color = "red";
-            status.innerHTML = "❌ Error: " + err.message + 
-                               "<br><br>Check if your reps.json has a broken comma or is missing.";
-            console.error(err);
+    // Clean, light map background
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    // 2. Load the data
+    const statesUrl = 'https://raw.githubusercontent.com/PublicaMundi/MappingPHL/master/data/us_states.json';
+
+    Promise.all([
+        fetch('./reps.json').then(res => res.json()),
+        fetch(statesUrl).then(res => res.json())
+    ]).then(([reps, statesData]) => {
+        
+        // Group reps by state name (Case insensitive for safety)
+        const stateGroups = {};
+        reps.forEach(r => {
+            if (r.state) {
+                const sName = r.state.trim();
+                if (!stateGroups[sName]) stateGroups[sName] = [];
+                stateGroups[sName].push(r.name);
+            }
         });
+
+        // 3. Add the State Shapes
+        L.geoJson(statesData, {
+            style: function(feature) {
+                const sName = feature.properties.name;
+                const hasReps = stateGroups[sName] && stateGroups[sName].length > 0;
+                
+                return {
+                    fillColor: hasReps ? '#004a99' : '#e0e0e0', // Karnak Blue or Grey
+                    weight: 2,
+                    opacity: 1,
+                    color: 'white', // Border color
+                    fillOpacity: hasReps ? 0.75 : 0.4
+                };
+            },
+            onEachFeature: function(feature, layer) {
+                const sName = feature.properties.name;
+                const repsList = stateGroups[sName] || [];
+                
+                // Build the popup content
+                let content = `<div class="state-title">${sName}</div>`;
+                if (repsList.length > 0) {
+                    content += `<ul class="rep-list">`;
+                    repsList.forEach(name => {
+                        content += `<li class="rep-item">${name}</li>`;
+                    });
+                    content += `</ul>`;
+                } else {
+                    content += `<div style="color:#999; font-style:italic;">No Reps Assigned</div>`;
+                }
+
+                layer.bindPopup(content);
+
+                // Hover Effects
+                layer.on({
+                    mouseover: (e) => { 
+                        const l = e.target;
+                        l.setStyle({ fillOpacity: 0.9, weight: 3, color: '#ffcc00' }); // Gold border on hover
+                        l.bringToFront();
+                    },
+                    mouseout: (e) => { 
+                        const hasReps = (stateGroups[sName] || []).length > 0;
+                        e.target.setStyle({ 
+                            fillOpacity: hasReps ? 0.75 : 0.4, 
+                            weight: 2, 
+                            color: 'white' 
+                        }); 
+                    }
+                });
+            }
+        }).addTo(map);
+
+    }).catch(err => console.error("Data Error:", err));
 </script>
 
 </body>
