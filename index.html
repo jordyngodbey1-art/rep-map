@@ -11,59 +11,63 @@
         :root {
             --karnak-red: #ce2029;
             --karnak-light-red: #fff1f1;
-            --dark-border: #111111;
         }
 
-        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #fdfdfd; }
+        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #fdfdfd; overflow: hidden; }
         
-        /* Header Bar */
         #header {
             background: white;
-            padding: 10px 20px;
+            padding: 8px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             border-bottom: 4px solid var(--karnak-red);
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: relative;
             z-index: 1000;
         }
 
-        #header h1 { margin: 0; font-size: 1.2rem; color: var(--karnak-red); text-transform: uppercase; letter-spacing: 1px; font-weight: 800; }
-        #badge { background: var(--karnak-red); color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
+        .logo-container { display: flex; align-items: center; gap: 15px; }
+        .logo-container img { height: 40px; width: auto; }
+        .logo-container h1 { margin: 0; font-size: 1.1rem; color: var(--karnak-red); letter-spacing: 1px; font-weight: bold; }
 
-        /* Map Area */
-        #map { height: calc(100vh - 60px); width: 100%; }
+        #badge { background: var(--karnak-red); color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
+        #map { height: calc(100vh - 65px); width: 100%; background: #e0e0e0; }
+
+        /* State Label Styling */
+        .state-label {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            color: white !important;
+            font-weight: bold !important;
+            font-size: 11px !important;
+            text-shadow: 1px 1px 2px #000, -1px -1px 2px #000; /* Makes it visible on red */
+            pointer-events: none;
+            text-transform: uppercase;
+        }
 
         /* Popup Styling */
-        .k-popup { min-width: 200px; max-height: 300px; overflow-y: auto; }
+        .k-popup { min-width: 210px; max-height: 300px; overflow-y: auto; }
         .k-popup h3 { color: var(--karnak-red); border-bottom: 2px solid var(--karnak-red); margin: 0 0 10px 0; font-size: 1.1rem; }
         
         .reg-label {
-            font-weight: bold;
-            background: var(--karnak-light-red);
-            color: var(--karnak-red);
-            padding: 3px 6px;
-            margin-top: 10px;
-            font-size: 10px;
-            text-transform: uppercase;
-            border-radius: 2px;
-            border-left: 3px solid var(--karnak-red);
+            font-weight: bold; background: var(--karnak-light-red); color: var(--karnak-red);
+            padding: 4px 6px; margin-top: 10px; font-size: 10px; text-transform: uppercase;
+            border-radius: 2px; border-left: 3px solid var(--karnak-red);
         }
 
         .rep-names { padding-left: 15px; margin: 5px 0; font-size: 13px; color: #222; list-style-type: square; }
         .rep-names li { margin-bottom: 4px; font-weight: 500; }
-
-        /* Custom Scrollbar */
-        .k-popup::-webkit-scrollbar { width: 5px; }
-        .k-popup::-webkit-scrollbar-thumb { background: #ce2029; border-radius: 10px; }
     </style>
 </head>
 <body>
 
 <div id="header">
-    <h1>KARNAK <span style="font-weight:300; color:#444;">| TERRITORY LOCATOR</span></h1>
-    <div id="badge">LOADING DATA...</div>
+    <div class="logo-container">
+        <img src="https://www.karnakcorp.com/wp-content/uploads/2021/04/Karnak-Logo-Red-RGB.png" alt="Karnak Logo">
+        <h1>TERRITORY LOCATOR</h1>
+    </div>
+    <div id="badge">LOADING REPS...</div>
 </div>
 
 <div id="map"></div>
@@ -73,12 +77,11 @@
 <script>
     const map = L.map('map').setView([37.8, -96], 4);
 
-    // Clean Map Background
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap &copy; CARTO'
+        attribution: '&copy; CARTO'
     }).addTo(map);
 
-    async function loadMap() {
+    async function loadKarnakMap() {
         try {
             const [repData, shapeData] = await Promise.all([
                 fetch('./reps.json'),
@@ -101,22 +104,29 @@
             });
 
             L.geoJson(states, {
-                style: function(f) {
+                style: (f) => {
                     const active = territoryGroups[f.properties.name];
                     return {
-                        fillColor: active ? '#ce2029' : '#e0e0e0', // ACTIVE RED vs INACTIVE GREY
+                        fillColor: active ? '#ce2029' : '#d1d1d1',
                         weight: 1.5,
-                        color: '#111111', // BOLD BLACK BORDERS
+                        color: '#000000', // SHARP BLACK BORDERS
                         opacity: 1,
-                        fillOpacity: 0.8 // Slightly higher opacity for Red to look richer
+                        fillOpacity: 0.8
                     };
                 },
-                onEachFeature: function(f, l) {
+                onEachFeature: (f, l) => {
                     const name = f.properties.name;
                     const regions = territoryGroups[name];
 
+                    // ADD STATE NAME LABEL
+                    l.bindTooltip(name, {
+                        permanent: true,
+                        direction: 'center',
+                        className: 'state-label'
+                    }).openTooltip();
+
+                    // BUILD POPUP
                     let html = `<div class="k-popup"><h3>${name}</h3>`;
-                    
                     if (regions) {
                         const order = ["Northern", "Southern", "Eastern", "Western", "Central"];
                         Object.keys(regions).sort((a,b) => {
@@ -129,15 +139,14 @@
                             html += `</ul>`;
                         });
                     } else {
-                        html += `<p style="font-size:12px; color:#999;">No assigned representatives.</p>`;
+                        html += `<p style="font-size:12px; color:#999;">No reps assigned.</p>`;
                     }
-                    
                     html += `</div>`;
                     l.bindPopup(html);
 
                     l.on({
-                        mouseover: (e) => { e.target.setStyle({ fillOpacity: 0.95, weight: 3, color: '#000' }); },
-                        mouseout: (e) => { e.target.setStyle({ fillOpacity: 0.8, weight: 1.5, color: '#111111' }); },
+                        mouseover: (e) => { e.target.setStyle({ fillOpacity: 0.95, weight: 3 }); },
+                        mouseout: (e) => { e.target.setStyle({ fillOpacity: 0.8, weight: 1.5 }); },
                         click: (e) => { map.fitBounds(e.target.getBounds()); }
                     });
                 }
@@ -145,11 +154,11 @@
 
         } catch (e) {
             console.error(e);
-            document.getElementById('badge').innerText = "ERROR";
+            document.getElementById('badge').innerText = "DATA ERROR";
         }
     }
 
-    loadMap();
+    loadKarnakMap();
 </script>
 
 </body>
