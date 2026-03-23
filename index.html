@@ -1,24 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>KARNAK | Territory Locator</title>
+    <title>Karnak Territory Map | Debugger</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        body { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
-        #header { background: #fff; padding: 12px 20px; border-bottom: 3px solid #004a99; display: flex; align-items: center; justify-content: space-between; }
-        #map { height: calc(100vh - 70px); width: 100%; background: #f0f0f0; }
-        .info-box { padding: 10px; min-width: 160px; }
-        .state-title { font-weight: bold; color: #004a99; border-bottom: 2px solid #004a99; margin-bottom: 8px; }
-        .rep-list { margin: 0; padding: 0; list-style: none; font-size: 13px; }
-        #debug-bar { background: #333; color: #0f0; padding: 5px 15px; font-family: monospace; font-size: 11px; }
+        body { margin: 0; padding: 0; font-family: sans-serif; }
+        #map { height: 100vh; width: 100%; background: #eee; }
+        #debugger { 
+            position: absolute; top: 10px; left: 50px; z-index: 1000;
+            background: white; padding: 15px; border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); border-left: 5px solid #004a99;
+            max-width: 400px; font-size: 13px;
+        }
+        .error { color: #d9534f; font-weight: bold; margin-top: 10px; }
+        .success { color: #5cb85c; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div id="debug-bar">System Status: <span id="log">Initializing...</span></div>
-
-<div id="header">
-    <h1 style="margin:0; font-size:1.3rem; color:#004a99;">KARNAK <span style="font-weight:300; color:#666;">| TERRITORY MAP</span></h1>
+<div id="debugger">
+    <b style="color:#004a99; font-size: 1.1em;">Karnak System Diagnostics:</b><hr>
+    <div id="step1">1. Checking reps.json... ⏳</div>
+    <div id="step2">2. Checking State Shapes... ⏳</div>
+    <div id="step3">3. Drawing Territories... ⏳</div>
 </div>
 
 <div id="map"></div>
@@ -26,71 +30,52 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-    const log = document.getElementById('log');
     const map = L.map('map').setView([37.8, -96], 4);
-
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-    // Using a different, highly reliable US States source
-    const statesUrl = 'https://raw.githubusercontent.com/PublicaMundi/MappingPHL/master/data/us_states.json';
-    const repsUrl = './reps.json';
-
-    async function loadMap() {
+    async function startMap() {
+        // --- STEP 1: LOAD REPS ---
         try {
-            log.innerText = "Fetching Reps...";
-            const repRes = await fetch(repsUrl);
-            const reps = await repRes.json();
+            const res = await fetch('./reps.json');
+            if (!res.ok) throw new Error("File 'reps.json' not found on server.");
+            const reps = await res.json();
+            document.getElementById('step1').innerHTML = "1. reps.json: <span class='success'>VALID ✅ (" + reps.length + " reps found)</span>";
             
-            log.innerText = "Fetching State Shapes...";
-            const stateRes = await fetch(statesUrl);
-            const statesData = await stateRes.json();
+            // --- STEP 2: LOAD STATES ---
+            try {
+                const sRes = await fetch('https://raw.githubusercontent.com/PublicaMundi/MappingPHL/master/data/us_states.json');
+                const statesData = await sRes.json();
+                document.getElementById('step2').innerHTML = "2. State Shapes: <span class='success'>LOADED ✅</span>";
 
-            log.innerText = "Data loaded. Mapping " + reps.length + " reps...";
+                // --- STEP 3: COLOR THE MAP ---
+                const stateGroups = {};
+                reps.forEach(r => { if(r.state) { (stateGroups[r.state] = stateGroups[r.state] || []).push(r.name); } });
 
-            // Grouping Logic
-            const stateGroups = {};
-            reps.forEach(r => {
-                const s = r.state;
-                if (s) {
-                    if (!stateGroups[s]) stateGroups[s] = [];
-                    stateGroups[s].push(r.name);
-                }
-            });
+                L.geoJson(statesData, {
+                    style: (f) => ({
+                        fillColor: (stateGroups[f.properties.name] || []).length > 0 ? '#004a99' : '#d1d1d1',
+                        weight: 2, color: 'white', fillOpacity: 0.7
+                    }),
+                    onEachFeature: (f, l) => {
+                        const list = stateGroups[f.properties.name] || [];
+                        const content = "<b>" + f.properties.name + "</b><hr>" + (list.length > 0 ? "<ul><li>" + list.join("</li><li>") + "</li></ul>" : "No Reps");
+                        l.bindPopup(content);
+                    }
+                }).addTo(map);
 
-            // Draw States
-            L.geoJson(statesData, {
-                style: function(feature) {
-                    const name = feature.properties.name;
-                    const hasReps = stateGroups[name] && stateGroups[name].length > 0;
-                    return {
-                        fillColor: hasReps ? '#004a99' : '#d1d1d1',
-                        weight: 2,
-                        opacity: 1,
-                        color: 'white',
-                        fillOpacity: 0.7
-                    };
-                },
-                onEachFeature: function(feature, layer) {
-                    const name = feature.properties.name;
-                    const list = stateGroups[name] || [];
-                    let content = `<div class="info-box"><div class="state-title">${name}</div><ul class="rep-list">`;
-                    content += list.length > 0 ? list.map(n => `<li>${n}</li>`).join('') : "<li>No reps assigned.</li>";
-                    content += "</ul></div>";
-                    
-                    layer.bindPopup(content);
-                }
-            }).addTo(map);
+                document.getElementById('step3').innerHTML = "3. Status: <span class='success'>MAP READY! 🚀</span>";
 
-            log.innerText = "Success: Map Shaded.";
+            } catch (e) {
+                document.getElementById('step2').innerHTML = "2. State Shapes: <span class='error'>FAILED ❌ (Check URL)</span>";
+            }
 
-        } catch (err) {
-            log.style.color = "red";
-            log.innerText = "Critical Error: " + err.message;
-            console.error(err);
+        } catch (e) {
+            document.getElementById('step1').innerHTML = "1. reps.json: <span class='error'>BROKEN ❌</span><br><small>" + e.message + "</small>";
+            console.error(e);
         }
     }
 
-    loadMap();
+    startMap();
 </script>
 
 </body>
