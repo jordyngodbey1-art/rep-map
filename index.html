@@ -1,114 +1,155 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KARNAK | Territory Locator</title>
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
     <style>
-        body { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; }
-        #header { background: white; padding: 15px 25px; border-bottom: 3px solid #004a99; display: flex; align-items: center; justify-content: space-between; }
-        #map { height: calc(100vh - 75px); width: 100%; }
+        :root {
+            --karnak-red: #ce2029;
+            --karnak-light-red: #fff1f1;
+            --dark-border: #111111;
+        }
+
+        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #fdfdfd; }
         
+        /* Header Bar */
+        #header {
+            background: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 4px solid var(--karnak-red);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1000;
+        }
+
+        #header h1 { margin: 0; font-size: 1.2rem; color: var(--karnak-red); text-transform: uppercase; letter-spacing: 1px; font-weight: 800; }
+        #badge { background: var(--karnak-red); color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
+
+        /* Map Area */
+        #map { height: calc(100vh - 60px); width: 100%; }
+
         /* Popup Styling */
-        .karnak-popup { min-width: 170px; }
-        .karnak-popup b { color: #004a99; font-size: 1.1em; display: block; border-bottom: 1px solid #ddd; margin-bottom: 5px; padding-bottom: 2px; }
-        .karnak-popup ul { padding-left: 18px; margin: 5px 0; font-size: 13px; }
-        .karnak-popup li { margin-bottom: 3px; color: #333; }
+        .k-popup { min-width: 200px; max-height: 300px; overflow-y: auto; }
+        .k-popup h3 { color: var(--karnak-red); border-bottom: 2px solid var(--karnak-red); margin: 0 0 10px 0; font-size: 1.1rem; }
         
-        /* Loading Status (Top Right) */
-        #status-pill { position: absolute; top: 85px; right: 10px; z-index: 1000; background: white; padding: 5px 15px; border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); font-size: 11px; font-weight: bold; border: 1px solid #004a99; }
+        .reg-label {
+            font-weight: bold;
+            background: var(--karnak-light-red);
+            color: var(--karnak-red);
+            padding: 3px 6px;
+            margin-top: 10px;
+            font-size: 10px;
+            text-transform: uppercase;
+            border-radius: 2px;
+            border-left: 3px solid var(--karnak-red);
+        }
+
+        .rep-names { padding-left: 15px; margin: 5px 0; font-size: 13px; color: #222; list-style-type: square; }
+        .rep-names li { margin-bottom: 4px; font-weight: 500; }
+
+        /* Custom Scrollbar */
+        .k-popup::-webkit-scrollbar { width: 5px; }
+        .k-popup::-webkit-scrollbar-thumb { background: #ce2029; border-radius: 10px; }
     </style>
 </head>
 <body>
 
 <div id="header">
-    <h1 style="margin:0; font-size:1.4rem; color:#004a99;">KARNAK <span style="font-weight:300; color:#666;">| TERRITORY LOCATOR</span></h1>
-    <div style="font-size:12px; color:#999; text-align:right;">Headquartered in Clark, NJ</div>
+    <h1>KARNAK <span style="font-weight:300; color:#444;">| TERRITORY LOCATOR</span></h1>
+    <div id="badge">LOADING DATA...</div>
 </div>
 
-<div id="status-pill">System: Initializing...</div>
 <div id="map"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-    const status = document.getElementById('status-pill');
     const map = L.map('map').setView([37.8, -96], 4);
 
-    // Using a cleaner "Light" map style for professionalism
+    // Clean Map Background
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; OpenStreetMap &copy; CARTO'
     }).addTo(map);
 
-    // Helper: Handles both "NJ" and "New Jersey"
-    const stateLookup = { "AL":"Alabama","AK":"Alaska","AZ":"Arizona","AR":"Arkansas","CA":"California","CO":"Colorado","CT":"Connecticut","DE":"Delaware","FL":"Florida","GA":"Georgia","HI":"Hawaii","ID":"Idaho","IL":"Illinois","IN":"Indiana","IA":"Iowa","KS":"Kansas","KY":"Kentucky","LA":"Louisiana","ME":"Maine","MD":"Maryland","MA":"Massachusetts","MI":"Michigan","MN":"Minnesota","MS":"Mississippi","MO":"Missouri","MT":"Montana","NE":"Nebraska","NV":"Nevada","NH":"New Hampshire","NJ":"New Jersey","NM":"New Mexico","NY":"New York","NC":"North Carolina","ND":"North Dakota","OH":"Ohio","OK":"Oklahoma","OR":"Oregon","PA":"Pennsylvania","RI":"Rhode Island","SC":"South Carolina","SD":"South Dakota","TN":"Tennessee","TX":"Texas","UT":"Utah","VT":"Vermont","VA":"Virginia","WA":"Washington","WV":"West Virginia","WI":"Wisconsin","WY":"Wyoming" };
-
-    async function buildKarnakMap() {
+    async function loadMap() {
         try {
-            status.innerText = "Loading Rep Data...";
-            const repRes = await fetch('./reps.json');
-            const reps = await repRes.json();
+            const [repData, shapeData] = await Promise.all([
+                fetch('./reps.json'),
+                fetch('./states.json')
+            ]);
 
-            status.innerText = "Loading State Outlines...";
-            const stateRes = await fetch('./states.json'); // This now looks at YOUR file
-            const statesData = await stateRes.json();
+            const reps = await repData.json();
+            const states = await shapeData.json();
 
-            // Group the reps
-            const stateGroups = {};
+            document.getElementById('badge').innerText = reps.length + " ACTIVE REPS";
+
+            const territoryGroups = {};
             reps.forEach(r => {
-                let sName = r.state;
-                if (sName && sName.length === 2) sName = stateLookup[sName.toUpperCase()];
-                if (sName) {
-                    if (!stateGroups[sName]) stateGroups[sName] = [];
-                    stateGroups[sName].push(r.name);
+                if (r.state) {
+                    if (!territoryGroups[r.state]) territoryGroups[r.state] = {};
+                    const region = r.region || "General";
+                    if (!territoryGroups[r.state][region]) territoryGroups[r.state][region] = [];
+                    territoryGroups[r.state][region].push(r.name);
                 }
             });
 
-            // Draw the territories
-            L.geoJson(statesData, {
-                style: function(feature) {
-                    const name = feature.properties.name;
-                    const repCount = (stateGroups[name] || []).length;
+            L.geoJson(states, {
+                style: function(f) {
+                    const active = territoryGroups[f.properties.name];
                     return {
-                        fillColor: repCount > 0 ? '#004a99' : '#d1d1d1',
+                        fillColor: active ? '#ce2029' : '#e0e0e0', // ACTIVE RED vs INACTIVE GREY
                         weight: 1.5,
+                        color: '#111111', // BOLD BLACK BORDERS
                         opacity: 1,
-                        color: 'white',
-                        fillOpacity: 0.7
+                        fillOpacity: 0.8 // Slightly higher opacity for Red to look richer
                     };
                 },
-                onEachFeature: function(feature, layer) {
-                    const name = feature.properties.name;
-                    const list = stateGroups[name] || [];
+                onEachFeature: function(f, l) {
+                    const name = f.properties.name;
+                    const regions = territoryGroups[name];
+
+                    let html = `<div class="k-popup"><h3>${name}</h3>`;
                     
-                    let popupContent = `<div class="karnak-popup"><b>${name.toUpperCase()}</b>`;
-                    if (list.length > 0) {
-                        popupContent += `<ul>` + list.map(n => `<li>${n}</li>`).join('') + `</ul>`;
+                    if (regions) {
+                        const order = ["Northern", "Southern", "Eastern", "Western", "Central"];
+                        Object.keys(regions).sort((a,b) => {
+                            let iA = order.indexOf(a) === -1 ? 99 : order.indexOf(a);
+                            let iB = order.indexOf(b) === -1 ? 99 : order.indexOf(b);
+                            return iA - iB;
+                        }).forEach(reg => {
+                            html += `<div class="reg-label">${reg}</div><ul class="rep-names">`;
+                            regions[reg].forEach(rep => html += `<li>${rep}</li>`);
+                            html += `</ul>`;
+                        });
                     } else {
-                        popupContent += `<p style="font-size:12px; margin:5px 0; color:#999;">No Representative Assigned</p>`;
+                        html += `<p style="font-size:12px; color:#999;">No assigned representatives.</p>`;
                     }
-                    popupContent += `</div>`;
+                    
+                    html += `</div>`;
+                    l.bindPopup(html);
 
-                    layer.bindPopup(popupContent);
-
-                    layer.on({
-                        mouseover: (e) => { e.target.setStyle({ fillOpacity: 0.9, weight: 3 }); },
-                        mouseout: (e) => { e.target.setStyle({ fillOpacity: 0.7, weight: 1.5 }); },
+                    l.on({
+                        mouseover: (e) => { e.target.setStyle({ fillOpacity: 0.95, weight: 3, color: '#000' }); },
+                        mouseout: (e) => { e.target.setStyle({ fillOpacity: 0.8, weight: 1.5, color: '#111111' }); },
                         click: (e) => { map.fitBounds(e.target.getBounds()); }
                     });
                 }
             }).addTo(map);
 
-            status.innerHTML = "✅ SYSTEM READY (" + reps.length + " REPS)";
-
-        } catch (err) {
-            status.style.color = "red";
-            status.style.borderColor = "red";
-            status.innerText = "CRITICAL ERROR: " + err.message;
-            console.error(err);
+        } catch (e) {
+            console.error(e);
+            document.getElementById('badge').innerText = "ERROR";
         }
     }
 
-    buildKarnakMap();
+    loadMap();
 </script>
 
 </body>
