@@ -1,140 +1,106 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KARNAK | Sales Rep Map</title>
-    
+    <title>KARNAK | Sales Territory Map</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
     <style>
-        :root { --karnak-blue: #004a99; --karnak-dark: #222; }
-        body { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; }
-        
-        .header {
-            background: white; padding: 15px 25px;
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        #header { 
+            background: #fff; padding: 15px 25px; 
+            border-bottom: 3px solid #004a99; 
             display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000; position: relative;
         }
-        .header h1 { margin: 0; font-size: 1.4rem; color: var(--karnak-blue); letter-spacing: 1px; }
-
-        #map { height: calc(100vh - 110px); width: 100%; background: #aad3df; }
-
-        /* Professional Popup Styling */
-        .leaflet-popup-content-wrapper { border-radius: 4px; padding: 5px; }
-        .state-title { 
-            border-bottom: 2px solid var(--karnak-blue); 
-            margin-bottom: 8px; font-weight: bold; color: var(--karnak-blue); font-size: 1.1rem;
-        }
-        .rep-list { padding: 0; margin: 0; list-style: none; max-height: 200px; overflow-y: auto; }
-        .rep-item { padding: 5px 0; border-bottom: 1px solid #eee; font-size: 0.9rem; color: #444; }
-        .rep-item:last-child { border-bottom: none; }
-
-        .footer {
-            background: var(--karnak-dark); color: white;
-            text-align: center; padding: 10px; font-size: 0.75rem;
-            position: fixed; bottom: 0; width: 100%; z-index: 1000;
-        }
+        #map { height: calc(100vh - 70px); width: 100%; background: #f8f8f8; }
+        .info-box { padding: 10px; background: white; border-radius: 5px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+        .state-label { font-weight: bold; color: #004a99; border-bottom: 1px solid #ccc; margin-bottom: 5px; }
+        ul { margin: 5px 0; padding-left: 18px; font-size: 13px; }
+        li { margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1>KARNAK <span style="font-weight:300; color:#666;">| REP LOCATOR</span></h1>
-    <div style="font-size: 0.85rem; color: #666;">Select a state to view reps</div>
+<div id="header">
+    <h1 style="margin:0; font-size:1.5rem; color:#004a99;">KARNAK <span style="font-weight:300; color:#666;">| Rep Locator</span></h1>
+    <div style="font-size:13px; color:#666;">Click any state to view authorized representatives</div>
 </div>
 
 <div id="map"></div>
 
-<div class="footer">
-    &copy; 2026 KARNAK Corporation. All Rights Reserved.
-</div>
-
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-    // 1. Setup the Map
-    const map = L.map('map', {
-        minZoom: 4,
-        maxZoom: 7,
-        maxBounds: [[24, -127], [50, -65]]
-    }).setView([39.8, -98.5], 4);
-
-    // Clean, light map background
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    // 1. Initialize Map
+    const map = L.map('map').setView([37.8, -96], 4);
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap'
     }).addTo(map);
 
-    // 2. Load the data
+    // 2. Data URLs
+    const repsUrl = './reps.json';
     const statesUrl = 'https://raw.githubusercontent.com/PublicaMundi/MappingPHL/master/data/us_states.json';
 
+    // 3. Helper to handle "NJ" vs "New Jersey"
+    const stateAbbr = {
+        "AL":"Alabama","AK":"Alaska","AZ":"Arizona","AR":"Arkansas","CA":"California","CO":"Colorado","CT":"Connecticut","DE":"Delaware","FL":"Florida","GA":"Georgia","HI":"Hawaii","ID":"Idaho","IL":"Illinois","IN":"Indiana","IA":"Iowa","KS":"Kansas","KY":"Kentucky","LA":"Louisiana","ME":"Maine","MD":"Maryland","MA":"Massachusetts","MI":"Michigan","MN":"Minnesota","MS":"Mississippi","MO":"Missouri","MT":"Montana","NE":"Nebraska","NV":"Nevada","NH":"New Hampshire","NJ":"New Jersey","NM":"New Mexico","NY":"New York","NC":"North Carolina","ND":"North Dakota","OH":"Ohio","OK":"Oklahoma","OR":"Oregon","PA":"Pennsylvania","RI":"Rhode Island","SC":"South Carolina","SD":"South Dakota","TN":"Tennessee","TX":"Texas","UT":"Utah","VT":"Vermont","VA":"Virginia","WA":"Washington","WV":"West Virginia","WI":"Wisconsin","WY":"Wyoming"
+    };
+
     Promise.all([
-        fetch('./reps.json').then(res => res.json()),
+        fetch(repsUrl).then(res => res.json()),
         fetch(statesUrl).then(res => res.json())
     ]).then(([reps, statesData]) => {
         
-        // Group reps by state name (Case insensitive for safety)
+        // Group reps by state name
         const stateGroups = {};
         reps.forEach(r => {
-            if (r.state) {
-                const sName = r.state.trim();
+            // Convert "NJ" to "New Jersey" if necessary
+            let sName = r.state;
+            if (sName && sName.length === 2) sName = stateAbbr[sName.toUpperCase()];
+            
+            if (sName) {
                 if (!stateGroups[sName]) stateGroups[sName] = [];
                 stateGroups[sName].push(r.name);
             }
         });
 
-        // 3. Add the State Shapes
+        // Add the state shapes
         L.geoJson(statesData, {
             style: function(feature) {
-                const sName = feature.properties.name;
-                const hasReps = stateGroups[sName] && stateGroups[sName].length > 0;
-                
+                const name = feature.properties.name;
+                const hasReps = stateGroups[name] && stateGroups[name].length > 0;
                 return {
                     fillColor: hasReps ? '#004a99' : '#e0e0e0', // Karnak Blue or Grey
-                    weight: 2,
+                    weight: 2,           // Border thickness
                     opacity: 1,
-                    color: 'white', // Border color
-                    fillOpacity: hasReps ? 0.75 : 0.4
+                    color: 'white',      // Border color
+                    fillOpacity: 0.7
                 };
             },
             onEachFeature: function(feature, layer) {
-                const sName = feature.properties.name;
-                const repsList = stateGroups[sName] || [];
+                const name = feature.properties.name;
+                const repsInState = stateGroups[name] || [];
                 
-                // Build the popup content
-                let content = `<div class="state-title">${sName}</div>`;
-                if (repsList.length > 0) {
-                    content += `<ul class="rep-list">`;
-                    repsList.forEach(name => {
-                        content += `<li class="rep-item">${name}</li>`;
-                    });
-                    content += `</ul>`;
-                } else {
-                    content += `<div style="color:#999; font-style:italic;">No Reps Assigned</div>`;
-                }
+                let listHtml = repsInState.length > 0 
+                    ? repsInState.map(n => `<li>${n}</li>`).join('')
+                    : "<li>No reps assigned.</li>";
 
-                layer.bindPopup(content);
+                layer.bindPopup(`
+                    <div class="info-box">
+                        <div class="state-label">${name.toUpperCase()}</div>
+                        <div style="font-size:11px; color:#666; margin-bottom:5px;">${repsInState.length} Reps Found:</div>
+                        <ul>${listHtml}</ul>
+                    </div>
+                `);
 
-                // Hover Effects
+                // Hover effects
                 layer.on({
-                    mouseover: (e) => { 
-                        const l = e.target;
-                        l.setStyle({ fillOpacity: 0.9, weight: 3, color: '#ffcc00' }); // Gold border on hover
-                        l.bringToFront();
-                    },
-                    mouseout: (e) => { 
-                        const hasReps = (stateGroups[sName] || []).length > 0;
-                        e.target.setStyle({ 
-                            fillOpacity: hasReps ? 0.75 : 0.4, 
-                            weight: 2, 
-                            color: 'white' 
-                        }); 
-                    }
+                    mouseover: (e) => { e.target.setStyle({ fillOpacity: 0.9, weight: 3 }); },
+                    mouseout: (e) => { e.target.setStyle({ fillOpacity: 0.7, weight: 2 }); }
                 });
             }
         }).addTo(map);
 
-    }).catch(err => console.error("Data Error:", err));
+    }).catch(err => console.error("Error:", err));
 </script>
 
 </body>
