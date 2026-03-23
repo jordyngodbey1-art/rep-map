@@ -1,81 +1,114 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Karnak Territory Map | Debugger</title>
+    <title>KARNAK | Territory Locator</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        body { margin: 0; padding: 0; font-family: sans-serif; }
-        #map { height: 100vh; width: 100%; background: #eee; }
-        #debugger { 
-            position: absolute; top: 10px; left: 50px; z-index: 1000;
-            background: white; padding: 15px; border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); border-left: 5px solid #004a99;
-            max-width: 400px; font-size: 13px;
-        }
-        .error { color: #d9534f; font-weight: bold; margin-top: 10px; }
-        .success { color: #5cb85c; font-weight: bold; }
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; }
+        #header { background: white; padding: 15px 25px; border-bottom: 3px solid #004a99; display: flex; align-items: center; justify-content: space-between; }
+        #map { height: calc(100vh - 75px); width: 100%; }
+        
+        /* Popup Styling */
+        .karnak-popup { min-width: 170px; }
+        .karnak-popup b { color: #004a99; font-size: 1.1em; display: block; border-bottom: 1px solid #ddd; margin-bottom: 5px; padding-bottom: 2px; }
+        .karnak-popup ul { padding-left: 18px; margin: 5px 0; font-size: 13px; }
+        .karnak-popup li { margin-bottom: 3px; color: #333; }
+        
+        /* Loading Status (Top Right) */
+        #status-pill { position: absolute; top: 85px; right: 10px; z-index: 1000; background: white; padding: 5px 15px; border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); font-size: 11px; font-weight: bold; border: 1px solid #004a99; }
     </style>
 </head>
 <body>
 
-<div id="debugger">
-    <b style="color:#004a99; font-size: 1.1em;">Karnak System Diagnostics:</b><hr>
-    <div id="step1">1. Checking reps.json... ⏳</div>
-    <div id="step2">2. Checking State Shapes... ⏳</div>
-    <div id="step3">3. Drawing Territories... ⏳</div>
+<div id="header">
+    <h1 style="margin:0; font-size:1.4rem; color:#004a99;">KARNAK <span style="font-weight:300; color:#666;">| TERRITORY LOCATOR</span></h1>
+    <div style="font-size:12px; color:#999; text-align:right;">Headquartered in Clark, NJ</div>
 </div>
 
+<div id="status-pill">System: Initializing...</div>
 <div id="map"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
+    const status = document.getElementById('status-pill');
     const map = L.map('map').setView([37.8, -96], 4);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-    async function startMap() {
-        // --- STEP 1: LOAD REPS ---
+    // Using a cleaner "Light" map style for professionalism
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO'
+    }).addTo(map);
+
+    // Helper: Handles both "NJ" and "New Jersey"
+    const stateLookup = { "AL":"Alabama","AK":"Alaska","AZ":"Arizona","AR":"Arkansas","CA":"California","CO":"Colorado","CT":"Connecticut","DE":"Delaware","FL":"Florida","GA":"Georgia","HI":"Hawaii","ID":"Idaho","IL":"Illinois","IN":"Indiana","IA":"Iowa","KS":"Kansas","KY":"Kentucky","LA":"Louisiana","ME":"Maine","MD":"Maryland","MA":"Massachusetts","MI":"Michigan","MN":"Minnesota","MS":"Mississippi","MO":"Missouri","MT":"Montana","NE":"Nebraska","NV":"Nevada","NH":"New Hampshire","NJ":"New Jersey","NM":"New Mexico","NY":"New York","NC":"North Carolina","ND":"North Dakota","OH":"Ohio","OK":"Oklahoma","OR":"Oregon","PA":"Pennsylvania","RI":"Rhode Island","SC":"South Carolina","SD":"South Dakota","TN":"Tennessee","TX":"Texas","UT":"Utah","VT":"Vermont","VA":"Virginia","WA":"Washington","WV":"West Virginia","WI":"Wisconsin","WY":"Wyoming" };
+
+    async function buildKarnakMap() {
         try {
-            const res = await fetch('./reps.json');
-            if (!res.ok) throw new Error("File 'reps.json' not found on server.");
-            const reps = await res.json();
-            document.getElementById('step1').innerHTML = "1. reps.json: <span class='success'>VALID ✅ (" + reps.length + " reps found)</span>";
-            
-            // --- STEP 2: LOAD STATES ---
-            try {
-                const sRes = await fetch('https://raw.githubusercontent.com/PublicaMundi/MappingPHL/master/data/us_states.json');
-                const statesData = await sRes.json();
-                document.getElementById('step2').innerHTML = "2. State Shapes: <span class='success'>LOADED ✅</span>";
+            status.innerText = "Loading Rep Data...";
+            const repRes = await fetch('./reps.json');
+            const reps = await repRes.json();
 
-                // --- STEP 3: COLOR THE MAP ---
-                const stateGroups = {};
-                reps.forEach(r => { if(r.state) { (stateGroups[r.state] = stateGroups[r.state] || []).push(r.name); } });
+            status.innerText = "Loading State Outlines...";
+            const stateRes = await fetch('./states.json'); // This now looks at YOUR file
+            const statesData = await stateRes.json();
 
-                L.geoJson(statesData, {
-                    style: (f) => ({
-                        fillColor: (stateGroups[f.properties.name] || []).length > 0 ? '#004a99' : '#d1d1d1',
-                        weight: 2, color: 'white', fillOpacity: 0.7
-                    }),
-                    onEachFeature: (f, l) => {
-                        const list = stateGroups[f.properties.name] || [];
-                        const content = "<b>" + f.properties.name + "</b><hr>" + (list.length > 0 ? "<ul><li>" + list.join("</li><li>") + "</li></ul>" : "No Reps");
-                        l.bindPopup(content);
+            // Group the reps
+            const stateGroups = {};
+            reps.forEach(r => {
+                let sName = r.state;
+                if (sName && sName.length === 2) sName = stateLookup[sName.toUpperCase()];
+                if (sName) {
+                    if (!stateGroups[sName]) stateGroups[sName] = [];
+                    stateGroups[sName].push(r.name);
+                }
+            });
+
+            // Draw the territories
+            L.geoJson(statesData, {
+                style: function(feature) {
+                    const name = feature.properties.name;
+                    const repCount = (stateGroups[name] || []).length;
+                    return {
+                        fillColor: repCount > 0 ? '#004a99' : '#d1d1d1',
+                        weight: 1.5,
+                        opacity: 1,
+                        color: 'white',
+                        fillOpacity: 0.7
+                    };
+                },
+                onEachFeature: function(feature, layer) {
+                    const name = feature.properties.name;
+                    const list = stateGroups[name] || [];
+                    
+                    let popupContent = `<div class="karnak-popup"><b>${name.toUpperCase()}</b>`;
+                    if (list.length > 0) {
+                        popupContent += `<ul>` + list.map(n => `<li>${n}</li>`).join('') + `</ul>`;
+                    } else {
+                        popupContent += `<p style="font-size:12px; margin:5px 0; color:#999;">No Representative Assigned</p>`;
                     }
-                }).addTo(map);
+                    popupContent += `</div>`;
 
-                document.getElementById('step3').innerHTML = "3. Status: <span class='success'>MAP READY! 🚀</span>";
+                    layer.bindPopup(popupContent);
 
-            } catch (e) {
-                document.getElementById('step2').innerHTML = "2. State Shapes: <span class='error'>FAILED ❌ (Check URL)</span>";
-            }
+                    layer.on({
+                        mouseover: (e) => { e.target.setStyle({ fillOpacity: 0.9, weight: 3 }); },
+                        mouseout: (e) => { e.target.setStyle({ fillOpacity: 0.7, weight: 1.5 }); },
+                        click: (e) => { map.fitBounds(e.target.getBounds()); }
+                    });
+                }
+            }).addTo(map);
 
-        } catch (e) {
-            document.getElementById('step1').innerHTML = "1. reps.json: <span class='error'>BROKEN ❌</span><br><small>" + e.message + "</small>";
-            console.error(e);
+            status.innerHTML = "✅ SYSTEM READY (" + reps.length + " REPS)";
+
+        } catch (err) {
+            status.style.color = "red";
+            status.style.borderColor = "red";
+            status.innerText = "CRITICAL ERROR: " + err.message;
+            console.error(err);
         }
     }
 
-    startMap();
+    buildKarnakMap();
 </script>
 
 </body>
