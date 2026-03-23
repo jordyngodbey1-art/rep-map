@@ -1,27 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>KARNAK | Sales Territory Map</title>
+    <title>KARNAK | Territory Locator</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         body { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
-        #header { 
-            background: #fff; padding: 15px 25px; 
-            border-bottom: 3px solid #004a99; 
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        #map { height: calc(100vh - 70px); width: 100%; background: #f8f8f8; }
-        .info-box { padding: 10px; background: white; border-radius: 5px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
-        .state-label { font-weight: bold; color: #004a99; border-bottom: 1px solid #ccc; margin-bottom: 5px; }
-        ul { margin: 5px 0; padding-left: 18px; font-size: 13px; }
-        li { margin-bottom: 4px; }
+        #header { background: #fff; padding: 12px 20px; border-bottom: 3px solid #004a99; display: flex; align-items: center; justify-content: space-between; }
+        #map { height: calc(100vh - 70px); width: 100%; background: #f0f0f0; }
+        .info-box { padding: 10px; min-width: 160px; }
+        .state-title { font-weight: bold; color: #004a99; border-bottom: 2px solid #004a99; margin-bottom: 8px; }
+        .rep-list { margin: 0; padding: 0; list-style: none; font-size: 13px; }
+        #debug-bar { background: #333; color: #0f0; padding: 5px 15px; font-family: monospace; font-size: 11px; }
     </style>
 </head>
 <body>
 
+<div id="debug-bar">System Status: <span id="log">Initializing...</span></div>
+
 <div id="header">
-    <h1 style="margin:0; font-size:1.5rem; color:#004a99;">KARNAK <span style="font-weight:300; color:#666;">| Rep Locator</span></h1>
-    <div style="font-size:13px; color:#666;">Click any state to view authorized representatives</div>
+    <h1 style="margin:0; font-size:1.3rem; color:#004a99;">KARNAK <span style="font-weight:300; color:#666;">| TERRITORY MAP</span></h1>
 </div>
 
 <div id="map"></div>
@@ -29,78 +26,71 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-    // 1. Initialize Map
+    const log = document.getElementById('log');
     const map = L.map('map').setView([37.8, -96], 4);
-    
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
 
-    // 2. Data URLs
-    const repsUrl = './reps.json';
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    // Using a different, highly reliable US States source
     const statesUrl = 'https://raw.githubusercontent.com/PublicaMundi/MappingPHL/master/data/us_states.json';
+    const repsUrl = './reps.json';
 
-    // 3. Helper to handle "NJ" vs "New Jersey"
-    const stateAbbr = {
-        "AL":"Alabama","AK":"Alaska","AZ":"Arizona","AR":"Arkansas","CA":"California","CO":"Colorado","CT":"Connecticut","DE":"Delaware","FL":"Florida","GA":"Georgia","HI":"Hawaii","ID":"Idaho","IL":"Illinois","IN":"Indiana","IA":"Iowa","KS":"Kansas","KY":"Kentucky","LA":"Louisiana","ME":"Maine","MD":"Maryland","MA":"Massachusetts","MI":"Michigan","MN":"Minnesota","MS":"Mississippi","MO":"Missouri","MT":"Montana","NE":"Nebraska","NV":"Nevada","NH":"New Hampshire","NJ":"New Jersey","NM":"New Mexico","NY":"New York","NC":"North Carolina","ND":"North Dakota","OH":"Ohio","OK":"Oklahoma","OR":"Oregon","PA":"Pennsylvania","RI":"Rhode Island","SC":"South Carolina","SD":"South Dakota","TN":"Tennessee","TX":"Texas","UT":"Utah","VT":"Vermont","VA":"Virginia","WA":"Washington","WV":"West Virginia","WI":"Wisconsin","WY":"Wyoming"
-    };
-
-    Promise.all([
-        fetch(repsUrl).then(res => res.json()),
-        fetch(statesUrl).then(res => res.json())
-    ]).then(([reps, statesData]) => {
-        
-        // Group reps by state name
-        const stateGroups = {};
-        reps.forEach(r => {
-            // Convert "NJ" to "New Jersey" if necessary
-            let sName = r.state;
-            if (sName && sName.length === 2) sName = stateAbbr[sName.toUpperCase()];
+    async function loadMap() {
+        try {
+            log.innerText = "Fetching Reps...";
+            const repRes = await fetch(repsUrl);
+            const reps = await repRes.json();
             
-            if (sName) {
-                if (!stateGroups[sName]) stateGroups[sName] = [];
-                stateGroups[sName].push(r.name);
-            }
-        });
+            log.innerText = "Fetching State Shapes...";
+            const stateRes = await fetch(statesUrl);
+            const statesData = await stateRes.json();
 
-        // Add the state shapes
-        L.geoJson(statesData, {
-            style: function(feature) {
-                const name = feature.properties.name;
-                const hasReps = stateGroups[name] && stateGroups[name].length > 0;
-                return {
-                    fillColor: hasReps ? '#004a99' : '#e0e0e0', // Karnak Blue or Grey
-                    weight: 3,           // Border thickness
-                    opacity: 3,
-                    color: 'black',      // Border color
-                    fillOpacity: 0.8
-                };
-            },
-            onEachFeature: function(feature, layer) {
-                const name = feature.properties.name;
-                const repsInState = stateGroups[name] || [];
-                
-                let listHtml = repsInState.length > 0 
-                    ? repsInState.map(n => `<li>${n}</li>`).join('')
-                    : "<li>No reps assigned.</li>";
+            log.innerText = "Data loaded. Mapping " + reps.length + " reps...";
 
-                layer.bindPopup(`
-                    <div class="info-box">
-                        <div class="state-label">${name.toUpperCase()}</div>
-                        <div style="font-size:11px; color:#666; margin-bottom:5px;">${repsInState.length} Reps Found:</div>
-                        <ul>${listHtml}</ul>
-                    </div>
-                `);
+            // Grouping Logic
+            const stateGroups = {};
+            reps.forEach(r => {
+                const s = r.state;
+                if (s) {
+                    if (!stateGroups[s]) stateGroups[s] = [];
+                    stateGroups[s].push(r.name);
+                }
+            });
 
-                // Hover effects
-                layer.on({
-                    mouseover: (e) => { e.target.setStyle({ fillOpacity: 0.9, weight: 3 }); },
-                    mouseout: (e) => { e.target.setStyle({ fillOpacity: 0.7, weight: 2 }); }
-                });
-            }
-        }).addTo(map);
+            // Draw States
+            L.geoJson(statesData, {
+                style: function(feature) {
+                    const name = feature.properties.name;
+                    const hasReps = stateGroups[name] && stateGroups[name].length > 0;
+                    return {
+                        fillColor: hasReps ? '#004a99' : '#d1d1d1',
+                        weight: 2,
+                        opacity: 1,
+                        color: 'white',
+                        fillOpacity: 0.7
+                    };
+                },
+                onEachFeature: function(feature, layer) {
+                    const name = feature.properties.name;
+                    const list = stateGroups[name] || [];
+                    let content = `<div class="info-box"><div class="state-title">${name}</div><ul class="rep-list">`;
+                    content += list.length > 0 ? list.map(n => `<li>${n}</li>`).join('') : "<li>No reps assigned.</li>";
+                    content += "</ul></div>";
+                    
+                    layer.bindPopup(content);
+                }
+            }).addTo(map);
 
-    }).catch(err => console.error("Error:", err));
+            log.innerText = "Success: Map Shaded.";
+
+        } catch (err) {
+            log.style.color = "red";
+            log.innerText = "Critical Error: " + err.message;
+            console.error(err);
+        }
+    }
+
+    loadMap();
 </script>
 
 </body>
