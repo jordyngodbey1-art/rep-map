@@ -13,14 +13,12 @@
             --karnak-light-red: #fff1f1;
         }
 
-        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #fdfdfd; overflow: hidden; }
+        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #ffffff; overflow: hidden; }
         
         #header {
             background: white;
             padding: 8px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            display: flex; align-items: center; justify-content: space-between;
             border-bottom: 4px solid var(--karnak-red);
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             z-index: 1000;
@@ -31,33 +29,35 @@
         .logo-container h1 { margin: 0; font-size: 1.1rem; color: var(--karnak-red); letter-spacing: 1.5px; font-weight: bold; }
 
         #badge { background: var(--karnak-red); color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
-        
-        /* The Map Background */
         #map { height: calc(100vh - 65px); width: 100%; background: #ffffff; }
 
-        /* State Label Styling (Visible on Solid Red) */
+        /* Abbreviated State Labels */
         .state-label {
             background: transparent !important;
             border: none !important;
             box-shadow: none !important;
             color: white !important;
-            font-weight: 800 !important;
-            font-size: 12px !important;
+            font-weight: 900 !important;
+            font-size: 13px !important;
             text-shadow: 1px 1px 3px #000;
             pointer-events: none;
-            text-transform: uppercase;
         }
+
+        /* Map Legend */
+        .legend {
+            background: white; padding: 10px; line-height: 18px; color: #333;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; border: 1px solid #ccc;
+        }
+        .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; border: 1px solid #000; }
 
         /* Popup Styling */
         .k-popup { min-width: 210px; max-height: 300px; overflow-y: auto; }
         .k-popup h3 { color: var(--karnak-red); border-bottom: 2px solid var(--karnak-red); margin: 0 0 10px 0; font-size: 1.1rem; }
-        
         .reg-label {
             font-weight: bold; background: var(--karnak-light-red); color: var(--karnak-red);
             padding: 4px 6px; margin-top: 10px; font-size: 10px; text-transform: uppercase;
             border-radius: 2px; border-left: 3px solid var(--karnak-red);
         }
-
         .rep-names { padding-left: 18px; margin: 5px 0; font-size: 13px; color: #222; list-style-type: square; }
         .rep-names li { margin-bottom: 4px; font-weight: 500; }
     </style>
@@ -77,15 +77,17 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-    const map = L.map('map', {
-        zoomSnap: 0.5,
-        wheelDebounceTime: 150
-    }).setView([37.8, -96], 4.5);
+    const map = L.map('map').setView([37.8, -96], 4.5);
 
-    // 1. BLANK MAP LAYER (No Labels, No Names)
+    // BLANK MAP LAYER
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; CARTO'
     }).addTo(map);
+
+    // State Abbreviation Lookup
+    const stateAbbr = {
+        'Alabama': 'AL', 'Alaska': 'AK', 'Arizona': 'AZ', 'Arkansas': 'AR', 'California': 'CA', 'Colorado': 'CO', 'Connecticut': 'CT', 'Delaware': 'DE', 'Florida': 'FL', 'Georgia': 'GA', 'Hawaii': 'HI', 'Idaho': 'ID', 'Illinois': 'IL', 'Indiana': 'IN', 'Iowa': 'IA', 'Kansas': 'KS', 'Kentucky': 'KY', 'Louisiana': 'LA', 'Maine': 'ME', 'Maryland': 'MD', 'Massachusetts': 'MA', 'Michigan': 'MI', 'Minnesota': 'MN', 'Mississippi': 'MS', 'Missouri': 'MO', 'Montana': 'MT', 'Nebraska': 'NE', 'Nevada': 'NV', 'New Hampshire': 'NH', 'New Jersey': 'NJ', 'New Mexico': 'NM', 'New York': 'NY', 'North Carolina': 'NC', 'North Dakota': 'ND', 'Ohio': 'OH', 'Oklahoma': 'OK', 'Oregon': 'OR', 'Pennsylvania': 'PA', 'Rhode Island': 'RI', 'South Carolina': 'SC', 'South Dakota': 'SD', 'Tennessee': 'TN', 'Texas': 'TX', 'Utah': 'UT', 'Vermont': 'VT', 'Virginia': 'VA', 'Washington': 'WA', 'West Virginia': 'WV', 'Wisconsin': 'WI', 'Wyoming': 'WY'
+    };
 
     async function loadKarnakMap() {
         try {
@@ -93,10 +95,8 @@
                 fetch('./reps.json'),
                 fetch('./states.json')
             ]);
-
             const reps = await repData.json();
             const states = await shapeData.json();
-
             document.getElementById('badge').innerText = reps.length + " ACTIVE REPS";
 
             const territoryGroups = {};
@@ -110,28 +110,19 @@
             });
 
             L.geoJson(states, {
-                style: (f) => {
-                    const active = territoryGroups[f.properties.name];
-                    return {
-                        fillColor: active ? '#ce2029' : '#e0e0e0', // Solid Red vs Light Grey
-                        weight: 1.5,
-                        color: '#000000',      // Deep Black Borders
-                        opacity: 1,
-                        fillOpacity: 1.0       // 100% SOLID - NO TRANSLUCENCY
-                    };
-                },
+                style: (f) => ({
+                    fillColor: territoryGroups[f.properties.name] ? '#ce2029' : '#e0e0e0',
+                    weight: 1.5, color: '#000000', opacity: 1, fillOpacity: 1.0
+                }),
                 onEachFeature: (f, l) => {
-                    const name = f.properties.name;
-                    const regions = territoryGroups[name];
+                    const fullName = f.properties.name;
+                    const abbr = stateAbbr[fullName] || fullName;
+                    const regions = territoryGroups[fullName];
 
-                    // Add the ONLY label visible on the map
-                    l.bindTooltip(name, {
-                        permanent: true,
-                        direction: 'center',
-                        className: 'state-label'
-                    }).openTooltip();
+                    // Label with Abbreviation
+                    l.bindTooltip(abbr, { permanent: true, direction: 'center', className: 'state-label' }).openTooltip();
 
-                    let html = `<div class="k-popup"><h3>${name}</h3>`;
+                    let html = `<div class="k-popup"><h3>${fullName}</h3>`;
                     if (regions) {
                         const order = ["Northern", "Southern", "Eastern", "Western", "Central"];
                         Object.keys(regions).sort((a,b) => {
@@ -143,9 +134,7 @@
                             regions[reg].forEach(rep => html += `<li>${rep}</li>`);
                             html += `</ul>`;
                         });
-                    } else {
-                        html += `<p style="font-size:12px; color:#999;">No assigned reps.</p>`;
-                    }
+                    } else { html += `<p style="font-size:12px; color:#999;">No assigned reps.</p>`; }
                     html += `</div>`;
                     l.bindPopup(html);
 
@@ -157,12 +146,18 @@
                 }
             }).addTo(map);
 
-        } catch (e) {
-            console.error(e);
-            document.getElementById('badge').innerText = "DATA ERROR";
-        }
-    }
+            // Add Legend
+            const legend = L.control({position: 'bottomright'});
+            legend.onAdd = function () {
+                const div = L.DomUtil.create('div', 'legend');
+                div.innerHTML += '<i style="background: #ce2029"></i> Active Territory<br>';
+                div.innerHTML += '<i style="background: #e0e0e0"></i> No Rep Assigned';
+                return div;
+            };
+            legend.addTo(map);
 
+        } catch (e) { console.error(e); }
+    }
     loadKarnakMap();
 </script>
 
