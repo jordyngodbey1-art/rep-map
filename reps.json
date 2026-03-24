@@ -1,17 +1,25 @@
 [
   {
     "name": "262 RIVERSIDE SALES",
-    "lat": 30.3262247,
-    "lng": -81.6579179,
     "state": "Florida",
-    "region": "Northern"
+    "counties": ["Calhoun", "Gulf", "Liberty", "Gadsden", "Franklin", "Wakulla", "Leon", "Jefferson", "Madison", "Taylor", "Lafayette", "Hamilton", "Suwannee", "Dixie", "Gilchrist", "Columbia", "Baker", "Union", "Bradford", "Alachua", "Levy", "Nassau", "Duval", "Clay", "St. Johns", "Putnam", "Flagler", "Marion", "Citrus", "Volusia", "Lake", "Sumter", "Seminole", "Brevard"]
   },
-  {
-    "name": "262 RIVERSIDE SALES",
-    "lat": 27.9449854,
-    "lng": -82.4583107,
+   {
+    "name": "230 HOLLOWAY SALES GROUP LLC (MW)",
+    "state": "Louisiana",
+    "counties": ["Escambia", "Santa Rosa", "Okaloosa", "Walton", "Holmes", "Washington", "Bay", "Jackson"]
+  },
+    {
+    "name": "236 THE SCARLETTE GROUP",
+    "lat": 27.996097,
+    "lng": -82.582035,
     "state": "Florida",
-    "region": "Central"
+    "counties": ["Hernando", "Pasco", "Pinellas", "Polk", "Orange", "Osceola", "Manatee", "Sarasota", "Hardee", "Desoto", "Charlotte", "Highlands", "Okeechobee", "Indian River", "St. Lucie"]
+  },
+    {
+    "name": "237 JC MOONS & ASSOCIATES",
+    "state": "Florida",
+    "counties": ["Hillsborough", "Martin", "Glades", "Lee", "Hendry", "Palm Beach", "Broward", "Collier", "Monroe", "Dade"]
   },
   {
     "name": "257 COMMERCIAL ROOFING SOLUTIONS LLC",
@@ -24,7 +32,7 @@
     "lat": 33.588771,
     "lng": -101.850445,
     "state": "Texas",
-    "region": "Northern"
+    "counties": ["Dallam", "Sherman", "Hansford", "Ochiltree", "Limpscomb", "Hartley", "Moore", "Hutchinson", "Roberts", "Hemphill", "Oldham", "Potter", "Carson", "Gray", "Wheeler", "Deaf Smith", "Randall", "Armstrong", "Donley", "Collingsworth", "Parmer", "Castro", "Swisher", "Briscoe", "Hall", "Childress", "Bailey", "Lamb", "Hale", "Floyd", "Motley", "Cottle", "Hardeman", "Foard", "Wilbarger", "Wichita", "Clay", "Montague", "Cooke", "Grayson", "Fannin", "Lamar", "Red River", "Bowie", "Yoakum", "Terry", "Lynn", "Garza", "Kent", "Stonewall", "Haskell", "Throckmorton", "Young", "Jack", "Wise", "Denton", "Collin", "Hunt", "Delta", "Hopkins", "Franklin", "Titus", "Morris", "Camp", "Cass", "Gaines", "Dawson", " 
   },
    {
     "name": "201 MARKET MAKERS INC",
@@ -349,20 +357,6 @@
     "lat": 35.050667,
     "lng": -89.847782,
     "state": "Tennessee"
-  },
-  {
-    "name": "236 THE SCARLETTE GROUP",
-    "lat": 27.996097,
-    "lng": -82.582035,
-    "state": "Florida",
-    "region": "Central"
-  },
-  {
-    "name": "237 JC MOONS & ASSOCIATES",
-    "lat": 25.942038,
-    "lng": -80.245605,
-    "state": "Florida",
-    "region": "Southern"
   },
   {
     "name": "178 LAGOD CONSTRUCTION PRODUCTS",
