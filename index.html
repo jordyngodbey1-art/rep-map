@@ -4,165 +4,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KARNAK | Territory Locator</title>
-    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
     <style>
-        :root { 
-            --karnak-red: #ce2029; 
-            --karnak-light: #fff1f1; 
-        }
-        
-        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #ffffff; overflow: hidden; }
-        
-        /* Centered Branding Header */
+        :root { --k-red: #ce2029; --k-bg: #fff1f1; }
+        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #ffffff; }
         #header {
-            background: white; 
-            padding: 15px 20px; 
-            display: flex; 
-            flex-direction: column;
-            align-items: center; 
-            justify-content: center;
-            border-bottom: 5px solid var(--karnak-red); 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
-            z-index: 1000;
+            background: white; padding: 20px; display: flex; flex-direction: column;
+            align-items: center; border-bottom: 5px solid var(--k-red); box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-
-        .logo-text { 
-            font-size: 2rem; 
-            font-weight: 900; 
-            color: var(--karnak-red); 
-            letter-spacing: 4px; 
-            margin: 0;
-            text-transform: uppercase;
-        }
-
-        .sub-text {
-            font-size: 0.8rem;
-            color: #666;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-top: -5px;
-        }
-
-        /* Map & Solid Labels */
-        #map { height: calc(100vh - 85px); width: 100%; background: #ffffff; }
-        
+        .logo-text { font-size: 2.5rem; font-weight: 900; color: var(--k-red); letter-spacing: 5px; text-transform: uppercase; margin: 0; }
+        #status-text { font-size: 0.7rem; color: #888; letter-spacing: 1px; text-transform: uppercase; margin-top: 5px; }
+        #map { height: calc(100vh - 110px); width: 100%; background: #f0f0f0; }
         .state-label {
             background: transparent !important; border: none !important; box-shadow: none !important;
-            color: white !important; font-weight: 900 !important; font-size: 13px !important;
-            text-shadow: 1px 1px 3px #000; pointer-events: none;
+            color: white !important; font-weight: 900 !important; font-size: 14px !important;
+            text-shadow: 2px 2px 4px #000; pointer-events: none;
         }
-
-        /* Professional Popups */
-        .k-popup { min-width: 220px; max-height: 300px; overflow-y: auto; padding-right: 5px; }
-        .k-popup h3 { color: var(--karnak-red); border-bottom: 2px solid var(--karnak-red); margin: 0 0 10px 0; font-size: 1.2rem; }
-        
-        .reg-label {
-            font-weight: bold; background: var(--karnak-light); color: var(--karnak-red);
-            padding: 4px 8px; margin-top: 12px; font-size: 10px; text-transform: uppercase;
-            border-radius: 2px; border-left: 4px solid var(--karnak-red);
-        }
-
-        .rep-names { padding-left: 18px; margin: 8px 0; font-size: 13px; color: #222; list-style-type: square; }
-        .rep-names li { margin-bottom: 4px; font-weight: 600; }
+        .k-popup { min-width: 200px; max-height: 300px; overflow-y: auto; }
+        .k-popup h3 { color: var(--k-red); border-bottom: 2px solid var(--k-red); margin: 0 0 10px 0; }
+        .reg-label { font-weight: bold; background: var(--k-bg); color: var(--k-red); padding: 4px; margin-top: 10px; font-size: 10px; text-transform: uppercase; border-left: 4px solid var(--k-red); }
+        .rep-names { padding-left: 15px; margin: 5px 0; font-size: 13px; list-style-type: square; }
     </style>
 </head>
 <body>
 
 <div id="header">
     <div class="logo-text">KARNAK</div>
-    <div class="sub-text">National Territory Locator</div>
+    <div id="status-text">Synchronizing 520 Representatives...</div>
 </div>
 
 <div id="map"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <script>
-    // Initialize Map on USA
-    const map = L.map('map').setView([37.8, -96], 4.5);
+    const stateAbbr = {'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA','Colorado':'CO','Connecticut':'CT','Delaware':'DE','Florida':'FL','Georgia':'GA','Hawaii':'HI','Idaho':'ID','Illinois':'IL','Indiana':'IN','Iowa':'IA','Kansas':'KS','Kentucky':'KY','Louisiana':'LA','Maine':'ME','Maryland':'MD','Massachusetts':'MA','Michigan':'MI','Minnesota':'MN','Mississippi':'MS','Missouri':'MO','Montana':'MT','Nebraska':'NE','Nevada':'NV','New Hampshire':'NH','New Jersey':'NJ','New Mexico':'NM','New York':'NY','North Carolina':'NC','North Dakota':'ND','Ohio':'OH','Oklahoma':'OK','Oregon':'OR','Pennsylvania':'PA','Rhode Island':'RI','South Carolina':'SC','South Dakota':'SD','Tennessee':'TN','Texas':'TX','Utah':'UT','Vermont':'VT','Virginia':'VA','Washington':'WA','West Virginia':'WV','Wisconsin':'WI','Wyoming':'WY'};
 
-    // Use a clean, no-label base map so our custom abbreviations stand out
+    const map = L.map('map').setView([37.8, -96], 4);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png').addTo(map);
 
-    const stateAbbr = {
-        'Alabama': 'AL', 'Alaska': 'AK', 'Arizona': 'AZ', 'Arkansas': 'AR', 'California': 'CA', 'Colorado': 'CO', 'Connecticut': 'CT', 'Delaware': 'DE', 'Florida': 'FL', 'Georgia': 'GA', 'Hawaii': 'HI', 'Idaho': 'ID', 'Illinois': 'IL', 'Indiana': 'IN', 'Iowa': 'IA', 'Kansas': 'KS', 'Kentucky': 'KY', 'Louisiana': 'LA', 'Maine': 'ME', 'Maryland': 'MD', 'Massachusetts': 'MA', 'Michigan': 'MI', 'Minnesota': 'MN', 'Mississippi': 'MS', 'Missouri': 'MO', 'Montana': 'MT', 'Nebraska': 'NE', 'Nevada': 'NV', 'New Hampshire': 'NH', 'New Jersey': 'NJ', 'New Mexico': 'NM', 'New York': 'NY', 'North Carolina': 'NC', 'North Dakota': 'ND', 'Ohio': 'OH', 'Oklahoma': 'OK', 'Oregon': 'OR', 'Pennsylvania': 'PA', 'Rhode Island': 'RI', 'South Carolina': 'SC', 'South Dakota': 'SD', 'Tennessee': 'TN', 'Texas': 'TX', 'Utah': 'UT', 'Vermont': 'VT', 'Virginia': 'VA', 'Washington': 'WA', 'West Virginia': 'WV', 'Wisconsin': 'WI', 'Wyoming': 'WY'
-    };
-
-    async function loadKarnakMap() {
+    async function loadKarnak() {
+        const status = document.getElementById('status-text');
         try {
-            const [repData, shapeData] = await Promise.all([ 
-                fetch('./reps.json'), 
-                fetch('./states.json') 
-            ]);
-            const reps = await repData.json();
-            const states = await shapeData.json();
+            const [rReq, sReq] = await Promise.all([fetch('./reps.json'), fetch('./states.json')]);
+            if (!rReq.ok || !sReq.ok) throw new Error("File not found check repo");
+            
+            const reps = await rReq.json();
+            const statesData = await sReq.json();
 
-            // Grouping logic for the 520 reps
-            const territoryGroups = {};
+            // 1. Group Reps
+            const groups = {};
             reps.forEach(r => {
-                const sName = r.state ? r.state.trim() : null;
-                if (sName) {
-                    if (!territoryGroups[sName]) territoryGroups[sName] = {};
-                    const reg = r.region || "General Territory";
-                    if (!territoryGroups[sName][reg]) territoryGroups[sName][reg] = [];
-                    territoryGroups[sName][reg].push(r.name);
+                const s = r.state ? r.state.trim() : null;
+                if (s) {
+                    if (!groups[s]) groups[s] = {};
+                    const reg = r.region || "General";
+                    if (!groups[s][reg]) groups[s][reg] = [];
+                    groups[s][reg].push(r.name);
                 }
             });
 
-            L.geoJson(states, {
-                style: (f) => ({
-                    fillColor: territoryGroups[f.properties.name.trim()] ? '#ce2029' : '#e0e0e0',
-                    weight: 1.5, 
-                    color: '#000', 
-                    fillOpacity: 1 // Solid Red
-                }),
+            // 2. Draw Map
+            L.geoJson(statesData, {
+                style: (f) => {
+                    const match = groups[f.properties.name];
+                    return { fillColor: match ? '#ce2029' : '#d1d1d1', weight: 1.5, color: '#000', fillOpacity: 1 };
+                },
                 onEachFeature: (f, l) => {
-                    const fullName = f.properties.name.trim();
-                    const abbr = stateAbbr[fullName] || fullName;
+                    const name = f.properties.name;
+                    const abbr = stateAbbr[name] || name;
                     
-                    // Abbreviation tooltips centered on state
-                    l.bindTooltip(abbr, { 
-                        permanent: true, 
-                        direction: 'center', 
-                        className: 'state-label' 
-                    }).openTooltip();
+                    // Force Label
+                    l.bindTooltip(abbr, { permanent: true, direction: 'center', className: 'state-label' }).openTooltip();
 
-                    // Popup Content
-                    let html = `<div class="k-popup"><h3>${fullName}</h3>`;
-                    const stateData = territoryGroups[fullName];
-                    
-                    if (stateData) {
-                        const order = ["Northern", "Southern", "Eastern", "Western", "Central"];
-                        Object.keys(stateData).sort((a,b) => {
-                            let iA = order.indexOf(a) === -1 ? 99 : order.indexOf(a);
-                            let iB = order.indexOf(b) === -1 ? 99 : order.indexOf(b);
-                            return iA - iB;
-                        }).forEach(reg => {
-                            html += `<div class="reg-label">${reg}</div><ul class="rep-names">`;
-                            stateData[reg].forEach(name => html += `<li>${name}</li>`);
-                            html += `</ul>`;
+                    // Popup
+                    let h = `<div class="k-popup"><h3>${name}</h3>`;
+                    if (groups[name]) {
+                        Object.entries(groups[name]).forEach(([reg, names]) => {
+                            h += `<div class="reg-label">${reg}</div><ul class="rep-names">`;
+                            names.forEach(n => h += `<li>${n}</li>`);
+                            h += `</ul>`;
                         });
-                    } else {
-                        html += `<p style="font-size:12px; color:#999; font-style:italic;">No representative assigned.</p>`;
-                    }
-                    l.bindPopup(html);
+                    } else { h += `<i>No assigned reps</i>`; }
+                    l.bindPopup(h + `</div>`);
                     
                     l.on({
-                        mouseover: (e) => e.target.setStyle({ fillOpacity: 0.9, weight: 3 }),
-                        mouseout: (e) => e.target.setStyle({ fillOpacity: 1, weight: 1.5 }),
+                        mouseover: (e) => e.target.setStyle({ fillOpacity: 0.8 }),
+                        mouseout: (e) => e.target.setStyle({ fillOpacity: 1 }),
                         click: (e) => map.fitBounds(e.target.getBounds())
                     });
                 }
             }).addTo(map);
+            status.innerText = "All Territories Active";
 
-        } catch (e) { 
-            console.error("Map Load Error:", e); 
+        } catch (e) {
+            status.innerText = "ERROR: " + e.message;
+            status.style.color = "red";
         }
     }
-    loadKarnakMap();
+    loadKarnak();
 </script>
-
 </body>
 </html>
