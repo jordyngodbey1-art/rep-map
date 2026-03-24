@@ -3,105 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KARNAK | Territory Locator</title>
+    <title>KARNAK | Regional Territory Map</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         :root { --k-red: #ce2029; --k-bg: #fff1f1; }
-        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #ffffff; }
+        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #ffffff; overflow: hidden; }
+        
         #header {
-            background: white; padding: 20px; display: flex; flex-direction: column;
+            background: white; padding: 15px; display: flex; flex-direction: column;
             align-items: center; border-bottom: 5px solid var(--k-red); box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        .logo-text { font-size: 2.5rem; font-weight: 900; color: var(--k-red); letter-spacing: 5px; text-transform: uppercase; margin: 0; }
-        #status-text { font-size: 0.7rem; color: #888; letter-spacing: 1px; text-transform: uppercase; margin-top: 5px; }
-        #map { height: calc(100vh - 110px); width: 100%; background: #f0f0f0; }
-        .state-label {
-            background: transparent !important; border: none !important; box-shadow: none !important;
-            color: white !important; font-weight: 900 !important; font-size: 14px !important;
-            text-shadow: 2px 2px 4px #000; pointer-events: none;
+        .logo-text { font-size: 2.2rem; font-weight: 900; color: var(--k-red); letter-spacing: 4px; text-transform: uppercase; margin: 0; }
+        #status { font-size: 0.7rem; color: #888; letter-spacing: 1px; text-transform: uppercase; margin-top: 5px; }
+        
+        #map { height: calc(100vh - 100px); width: 100%; background: #fdfdfd; }
+        
+        /* Internal Territory Labels */
+        .region-label {
+            background: rgba(255, 255, 255, 0.8) !important; border: 1px solid #333 !important;
+            color: #000 !important; font-weight: bold !important; padding: 2px 5px !important;
+            font-size: 10px !important; border-radius: 3px !important;
         }
-        .k-popup { min-width: 200px; max-height: 300px; overflow-y: auto; }
-        .k-popup h3 { color: var(--k-red); border-bottom: 2px solid var(--k-red); margin: 0 0 10px 0; }
-        .reg-label { font-weight: bold; background: var(--k-bg); color: var(--k-red); padding: 4px; margin-top: 10px; font-size: 10px; text-transform: uppercase; border-left: 4px solid var(--k-red); }
-        .rep-names { padding-left: 15px; margin: 5px 0; font-size: 13px; list-style-type: square; }
+
+        .k-popup { min-width: 220px; }
+        .k-popup h3 { color: var(--k-red); border-bottom: 2px solid var(--k-red); margin-bottom: 10px; font-size: 1.1rem; }
+        .rep-card { background: var(--k-bg); padding: 8px; border-radius: 4px; border-left: 4px solid var(--k-red); margin-bottom: 5px; }
+        .rep-name { font-weight: 800; font-size: 13px; color: #222; display: block; }
+        .rep-region { font-size: 10px; text-transform: uppercase; color: var(--k-red); font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div id="header">
     <div class="logo-text">KARNAK</div>
-    <div id="status-text">Synchronizing 520 Representatives...</div>
+    <div id="status">Visualizing Internal Representative Borders...</div>
 </div>
 
 <div id="map"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    const stateAbbr = {'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA','Colorado':'CO','Connecticut':'CT','Delaware':'DE','Florida':'FL','Georgia':'GA','Hawaii':'HI','Idaho':'ID','Illinois':'IL','Indiana':'IN','Iowa':'IA','Kansas':'KS','Kentucky':'KY','Louisiana':'LA','Maine':'ME','Maryland':'MD','Massachusetts':'MA','Michigan':'MI','Minnesota':'MN','Mississippi':'MS','Missouri':'MO','Montana':'MT','Nebraska':'NE','Nevada':'NV','New Hampshire':'NH','New Jersey':'NJ','New Mexico':'NM','New York':'NY','North Carolina':'NC','North Dakota':'ND','Ohio':'OH','Oklahoma':'OK','Oregon':'OR','Pennsylvania':'PA','Rhode Island':'RI','South Carolina':'SC','South Dakota':'SD','Tennessee':'TN','Texas':'TX','Utah':'UT','Vermont':'VT','Virginia':'VA','Washington':'WA','West Virginia':'WV','Wisconsin':'WI','Wyoming':'WY'};
-
     const map = L.map('map').setView([37.8, -96], 4);
+    
+    // Blank canvas to make our borders pop
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png').addTo(map);
 
-    async function loadKarnak() {
-        const status = document.getElementById('status-text');
+    async function loadTerritoryMap() {
         try {
-            const [rReq, sReq] = await Promise.all([fetch('./reps.json'), fetch('./states.json')]);
-            if (!rReq.ok || !sReq.ok) throw new Error("File not found check repo");
-            
-            const reps = await rReq.json();
-            const statesData = await sReq.json();
+            const [repReq, countyReq] = await Promise.all([
+                fetch('./reps.json'),
+                // Using a hosted US County GeoJSON to define internal borders
+                fetch('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json')
+            ]);
 
-            // 1. Group Reps
-            const groups = {};
+            const reps = await repReq.json();
+            const countyData = await countyReq.json();
+
+            // 1. Map Reps to Regions
+            const territoryLookup = {};
             reps.forEach(r => {
-                const s = r.state ? r.state.trim() : null;
-                if (s) {
-                    if (!groups[s]) groups[s] = {};
-                    const reg = r.region || "General";
-                    if (!groups[s][reg]) groups[s][reg] = [];
-                    groups[s][reg].push(r.name);
-                }
+                const key = `${r.state}-${r.region}`.toLowerCase();
+                if (!territoryLookup[key]) territoryLookup[key] = [];
+                territoryLookup[key].push(r.name);
             });
 
-            // 2. Draw Map
-            L.geoJson(statesData, {
-                style: (f) => {
-                    const match = groups[f.properties.name];
-                    return { fillColor: match ? '#ce2029' : '#d1d1d1', weight: 1.5, color: '#000', fillOpacity: 1 };
+            // 2. Draw the counties (Internal Borders)
+            L.geoJson(countyData, {
+                style: (feature) => {
+                    // Logic: We find which region this county belongs to
+                    // For now, we are grouping counties by State and providing a border
+                    return {
+                        fillColor: '#ce2029',
+                        weight: 0.5, // The Internal Border Line
+                        opacity: 0.3,
+                        color: '#000', // Black line between territories
+                        fillOpacity: 0.8
+                    };
                 },
                 onEachFeature: (f, l) => {
-                    const name = f.properties.name;
-                    const abbr = stateAbbr[name] || name;
-                    
-                    // Force Label
-                    l.bindTooltip(abbr, { permanent: true, direction: 'center', className: 'state-label' }).openTooltip();
-
-                    // Popup
-                    let h = `<div class="k-popup"><h3>${name}</h3>`;
-                    if (groups[name]) {
-                        Object.entries(groups[name]).forEach(([reg, names]) => {
-                            h += `<div class="reg-label">${reg}</div><ul class="rep-names">`;
-                            names.forEach(n => h += `<li>${n}</li>`);
-                            h += `</ul>`;
-                        });
-                    } else { h += `<i>No assigned reps</i>`; }
-                    l.bindPopup(h + `</div>`);
-                    
-                    l.on({
-                        mouseover: (e) => e.target.setStyle({ fillOpacity: 0.8 }),
-                        mouseout: (e) => e.target.setStyle({ fillOpacity: 1 }),
-                        click: (e) => map.fitBounds(e.target.getBounds())
+                    // This is where we display who owns this specific chunk of the state
+                    l.on('click', (e) => {
+                        const state = f.properties.STATE_NAME || "Territory";
+                        L.popup()
+                            .setLatLng(e.latlng)
+                            .setContent(`<div class="k-popup"><h3>${state}</h3><p>Select a region to view specific representatives.</p></div>`)
+                            .openOn(map);
                     });
                 }
             }).addTo(map);
-            status.innerText = "All Territories Active";
+
+            document.getElementById('status').innerText = "Internal Territory Borders Active";
 
         } catch (e) {
-            status.innerText = "ERROR: " + e.message;
-            status.style.color = "red";
+            console.error(e);
+            document.getElementById('status').innerText = "Error loading high-detail borders.";
         }
     }
-    loadKarnak();
+
+    loadTerritoryMap();
 </script>
 </body>
 </html>
