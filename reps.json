@@ -6,13 +6,11 @@
   },
    {
     "name": "230 HOLLOWAY SALES GROUP LLC (MW)",
-    "state": "Louisiana",
+    "state": "Florida",
     "counties": ["Escambia", "Santa Rosa", "Okaloosa", "Walton", "Holmes", "Washington", "Bay", "Jackson"]
   },
     {
     "name": "236 THE SCARLETTE GROUP",
-    "lat": 27.996097,
-    "lng": -82.582035,
     "state": "Florida",
     "counties": ["Hernando", "Pasco", "Pinellas", "Polk", "Orange", "Osceola", "Manatee", "Sarasota", "Hardee", "Desoto", "Charlotte", "Highlands", "Okeechobee", "Indian River", "St. Lucie"]
   },
@@ -29,52 +27,33 @@
   },
   {
     "name": "E258",
-    "lat": 33.588771,
-    "lng": -101.850445,
     "state": "Texas",
-    "counties": ["Dallas", "Sherman", "Hansford", "Ochiltree", "Limpscomb", "Hartley", "Moore", "Hutchinson", "Roberts", "Hemphill", "Oldham", "Potter", "Carson", "Gray", "Wheeler", "Deaf Smith", "Randall", "Armstrong", "Donley", "Collingsworth", "Parmer", "Castro", "Swisher", "Briscoe", "Hall", "Childress", "Bailey", "Lamb", "Hale", "Floyd", "Motley", "Cottle", "Hardeman", "Foard", "Wilbarger", "Wichita", "Clay", "Montague", "Cooke", "Grayson", "Fannin", "Lamar", "Red River", "Bowie", "Yoakum", "Terry", "Lynn", "Garza", "Kent", "Stonewall", "Haskell", "Throckmorton", "Young", "Jack", "Wise", "Denton", "Collin", "Hunt", "Delta", "Hopkins", "Franklin", "Titus", "Morris", "Camp", "Cass", "Gaines", "Dawson", " 
+   "counties": ["Armstrong", "Carson", "Dallam", "Deaf Smith", "Gray", "Hansford", "Hartley", "Hemphill", "Hutchinson", "Lipscomb", "Moore", "Ochiltree", "Oldham", "Potter", "Randall", "Roberts", "Sherman", "Briscoe", "Childress", "Collingsworth", "Cottle", "Dickens", "Donley", "Foard", "Hall", "Hardeman", "King", "Knox", "Motley", "Wheeler", "Bailey", "Castro", "Cochran", "Crosby", "Dawson", "Floyd", "Gaines", "Garza", "Hale", "Hockley", "Lamb", "Lubbock", "Lynn", "Parmer", "Swisher", "Terry", "Yoakum", "Borden", "Callahan", "Fisher", "Haskell", "Howard", "Jones", "Kent", "Mitchell", "Nolan", "Scurry", "Shackelford", "Stonewall", "Taylor", "Archer", "Baylor", "Clay", "Cooke", "Montague", "Throckmorton", "Wichita", "Wilbarger", "Young", "Delta", "Fannin", "Franklin", "Grayson", "Hopkins", "Hunt", "Lamar", "Rains", "Red River", "Bowie", "Camp", "Cass", "Harrison", "Marion", "Morris", "Panola", "Titus", "Upshur", "Anderson", "Cherokee", "Gregg", "Henderson", "Rusk", "Smith", "Van Zandt", "Wood", "Angelina", "Houston", "Nacogdoches", "Polk", "Sabine", "San Augustine", "San Jacinto", "Shelby", "Trinity", "Erath", "Hood", "Jack", "Johnson", "Palo Pinto", "Parker", "Somervell", "Tarrant", "Wise", "Collin", "Dallas", "Denton", "Ellis", "Kaufman", "Navarro", "Rockwall", "Bell", "Bosque", "Coryell", "Falls", "Hamilton", "Hill", "Limestone", "McLennan", "Andrews", "Martin", "Loving", "Winkler", "Ector", "Midland"]
   },
    {
     "name": "201 MARKET MAKERS INC",
-    "lat": 30.2711286,
-    "lng": -97.7436995,
     "state": "Texas",
-    "region": "Central"
-  },
-  {
-    "name": "201 MARKET MAKERS INC",
-    "lat": 29.7589382,
-    "lng": -95.3676974,
-    "state": "Texas",
-    "region": "Southern"
+    "counties": ["Bastrop", "Blanco", "Burnet", "Caldwell", "Gillespie", "Hays", "Lee", "Llano", "Mason", "Travis", "Williamson", "Chambers", "Hardin", "Jasper", "Jefferson", "Liberty", "Newton", "Orange", "Tyler", "Brown", "Coleman", "Comanche", "Eastland", "Lampasas", "McCulloch", "Mills", "San Saba", "Stephens", "Brazos", "Burleson", "Freestone", "Grimes", "Leon", "Madison", "Milam", "Robertson", "Walker", "Washington", "Aransas", "Bee", "Goliad", "Jim Wells", "Karnes", "Kleberg", "Live Oak", "Nueces", "Refugio", "San Patricio", "Brewster", "Culberson", "El Paso", "Hudspeth", "Jeff Davis", "Presidio", "Erath", "Hood", "Jack", "Johnson", "Palo Pinto", "Parker", "Somervell", "Tarrant", "Wise", "Brazoria", "Fort Bend", "Galveston", "Harris", "Montgomery", "Waller", "Dimmit", "Duval", "Kinney", "La Salle", "Maverick", "Val Verde", "Webb", "Zavala", "Austin", "Calhoun", "Colorado", "DeWitt", "Fayette", "Gonzales", "Jackson", "Lavaca", "Matagorda", "Victoria", "Wharton", "Coke", "Concho", "Crockett", "Edwards", "Glasscock", "Irion", "Kimble", "Menard", "Reagan", "Real", "Runnels", "Schleicher", "Sterling", "Sutton", "Tom Green", "Atascosa", "Bandera", "Bexar", "Comal", "Frio", "Guadalupe", "Kendall", "Kerr", "McMullen", "Medina", "Uvalde", "Wilson", "Brooks", "Cameron", "Hidalgo", "Jim Hogg", "Kenedy", "Starr", "Willacy", "Zapata", "Reeves", "Ward", "Crane", "Upton", "Pecos", "Terrell"]
   },
   {
     "name": "240 KENEFIC SALES ASSOCIATES",
-    "lat": 41.53091,
-    "lng": -75.54546,
     "state": "Pennsylvania",
-    "region": "Eastern"
+    "counties": ["Adams", "Lancaster", "Lebanon", "Lycoming", "Mifflin", "Montour", "Centre", "Northumberland", "Perry", "Clinton", "Columbia", "Cumberland", "Snyder", "Dauphin", "Somerset", "Union", "Franklin", "Fulton", "Huntingdon", "York", "Juniata", "Lackawanna", "Lehigh", "Berks", "Luzerne", "Bradford", "Monroe", "Carbon", "Northampton", "Pike", "Schuylkill", "Sullivan", "Susquehanna", "Tioga", "Wayne", "Wyoming", "Bucks", "Montgomery", "Chester", "Philadelphia", "Delaware"]
   },
   {
     "name": "20 B.E.S.T INC",
-    "lat": 40.82124,
-    "lng": -72.98653,
     "state": "New York",
-    "region": "Southern"
+    "counties": [ "Delaware", "Sullivan", "Ulster", "Rockland", "Westchester","Nassau","Suffolk","Bronx", "Kings","New York","Richmond","Queens","Dutchess","Orange","Putnam" ]
   },
   {
     "name": "250 ROOFING INNOVATIONS LLC",
-    "lat": 42.487716,
-    "lng": -79.328287,
     "state": "New York",
-    "region": "Northern"
+    "counties": ["Albany", "Columbia", "Fulton", "Greene", "Montgomery", "Rensselaer", "Saratoga", "Schenectady", "Schoharie", "Warren", "Washington", "Franklin", "Clinton", "Essex", "Hamilton", "Herkimer", "Jefferson", "Lewis", "Oneida", "Oswego", "St. Lawrence", "Broome", "Cayuga", "Chenango", "Cortland", "Madison", "Onondaga", "Otsego", "Tioga", "Tompkins", "Chemung", "Genesee", "Livingston", "Monroe", "Ontario", "Schuyler", "Seneca", "Steuben", "Wayne", "Yates", "Allegany", "Cattaraugus", "Chautauqua", "Erie", "Niagara", "Orleans", "Wyoming", "Dutchess", "Orange", "Putnam"]
   },
   {
     "name": "238 KENEFIC SALES ASSOCIATES",
-    "lat": 42.121293,
-    "lng": -80.088919,
     "state": "Pennsylvania",
-    "region": "Eastern"
+    "counties": ["Bedford", "Blair", "Cambria", "Lawrence", "McKean", "Mercer", "Cameron", "Clarion", "Clearfield", "Potter", "Crawford", "Elk", "Erie", "Forest", "Venango", "Warren", "Jefferson", "Allegheny", "Armstrong", "Beaver", "Butler", "Fayette", "Washington", "Greene", "Westmoreland", "Indiana"]
   },
   {
     "name": "255 INNOVATIVE BUILDING SOLUTION INC",
@@ -83,18 +62,16 @@
     "state": "Maryland"
   },
   {
-    "name": "240 KENEFIC SALES ASSOCIATES",
-    "lat": 41.243648,
-    "lng": -75.885029,
-    "state": "Pennsylvania",
-    "region": "Western"
-  },
-  {
     "name": "255 INNOVATIVE BUILDING SOLUTION INC",
-    "lat": 38.763463,
-    "lng": -77.186063,
     "state": "Virginia",
-    "region": "Northern"
+    "counties": [
+        "Alexandria",
+        "Arlington",
+        "Clarke",
+        "Fairfax",
+        "Frederick",
+        "Prince William"
+    ]
   },
   {
     "name": "257 COMMERCIAL ROOFING SOLUTIONS LLC",
@@ -110,10 +87,31 @@
   },
   {
     "name": "226 THE GEMROI COMPANY",
-    "lat": 37.274175,
-    "lng": -79.95786,
     "state": "Virginia",
-    "region": "Southern"
+    "counties": [
+        "Charles City", "Chesterfield", "Colonial Heights", "Dinwiddie", "Goochland", 
+        "Hanover", "Henrico", "Hopewell", "New Kent", "Petersburg", "Powhatan", 
+        "Prince George", "Richmond", "Surry", "Sussex", "Accomack", "Chesapeake", 
+        "Franklin", "Hampton", "Isle of Wight", "James City", "Newport News", 
+        "Norfolk", "Northampton", "Poquoson", "Portsmouth", "Southampton", "Suffolk", 
+        "Virginia Beach", "Williamsburg-James City", "York", "Caroline", "Colonial Beach", 
+        "Essex", "Fredericksburg", "Gloucester", "King George", "King William", 
+        "King and Queen", "Lancaster", "Mathews", "Middlesex", "Northumberland", 
+        "Richmond", "Spotsylvania", "Stafford", "Westmoreland", "West Point", 
+        "Culpeper", "Falls Church", "Fauquier", "Loudoun", "Madison", "Manassas", 
+        "Manassas Park", "Orange", "Page", "Rappahannock", "Shenandoah", "Warren", 
+        "Winchester", "Albemarle", "Amherst", "Augusta", "Bath", "Bedford", 
+        "Buena Vista", "Campbell", "Charlottesville", "Fluvanna", "Greene", 
+        "Harrisonburg", "Highland", "Lexington", "Louisa", "Lynchburg", "Nelson", 
+        "Rockbridge", "Rockingham", "Staunton", "Waynesboro", "Alleghany Highlands", 
+        "Botetourt", "Craig", "Danville", "Floyd", "Franklin", "Henry", "Martinsville", 
+        "Montgomery", "Patrick", "Pittsylvania", "Roanoke", "Roanoke", "Salem", 
+        "Bland", "Buchanan", "Bristol", "Carroll", "Dickenson", "Galax", "Giles", 
+        "Grayson", "Lee", "Norton", "Pulaski", "Radford", "Russell", "Scott", 
+        "Smyth", "Tazewell", "Washington", "Wise", "Wythe", "Amelia", "Appomattox", 
+        "Brunswick", "Buckingham", "Charlotte", "Cumberland", "Greensville", 
+        "Halifax", "Lunenburg", "Mecklenburg", "Nottoway", "Prince Edward"
+    ]
   },
   {
     "name": "255 INNOVATIVE BUILDING SOLUTION INC",
@@ -134,18 +132,6 @@
     "state": "Massachusetts"
   },
   {
-    "name": "250 ROOFING INNOVATIONS LLC",
-    "lat": 38.603783,
-    "lng": -76.867928,
-    "state": "Maryland"
-  },
-  {
-    "name": "255 INNOVATIVE BUILDING SOLUTION INC",
-    "lat": 39.443551,
-    "lng": -77.33294,
-    "state": "Maryland"
-  },
-  {
     "name": "254 ROOFING&EXTERIOR PROD SERVICES N",
     "lat": 38.371727,
     "lng": -82.412866,
@@ -162,13 +148,6 @@
     "lat": 44.086323,
     "lng": -70.169297,
     "state": "Maine"
-  },
-  {
-    "name": "245 A & D PRODUCTS",
-    "lat": 42.354546,
-    "lng": -89.039675,
-    "state": "Illinois",
-    "region": "Northern"
   },
   {
     "name": "157 B.R.A.V. ENTERPRISES",
@@ -196,10 +175,23 @@
   },
   {
     "name": "245 A & D PRODUCTS",
-    "lat": 41.747452,
-    "lng": -88.238622,
-    "state": "Indiana",
-    "region": "Northern"
+    "state": "Illinois",
+    "counties": [
+        "Winnebago",
+        "Boone",
+        "Ogle",
+        "Stephenson",
+        "Cook",
+        "DuPage",
+        "Lake",
+        "Will",
+        "Kane",
+        "McHenry",
+        "Kendall",
+        "Kankakee",
+        "DeKalb",
+        "Grundy"
+    ]
   },
   {
     "name": "267 WALCO LLC",
@@ -303,6 +295,16 @@
     "lat": 40.678193,
     "lng": -89.548486,
     "state": "Illinois"
+   "counties": [
+        "Rock Island", "La Salle", "Whiteside", "Henry", "Lee", "Bureau", "Jo Daviess", "Carroll", "Mercer", "Putnam",
+        "Adams", "Knox", "McDonough", "Hancock", "Warren", "Pike", "Schuyler", "Brown", "Henderson",
+        "Peoria", "McLean", "Tazewell", "Woodford", "Livingston", "Fulton", "De Witt", "Mason", "Marshall", "Stark",
+        "Champaign", "Vermilion", "Iroquois", "Douglas", "Piatt", "Ford",
+        "Sangamon", "Macon", "Macoupin", "Christian", "Morgan", "Montgomery", "Logan", "Shelby", "Cass", "Menard", "Greene", "Scott",
+        "Madison", "St. Clair", "Clinton", "Monroe", "Randolph", "Jersey", "Bond", "Washington", "Calhoun",
+        "Coles", "Marion", "Effingham", "Fayette", "Crawford", "Edgar", "Richland", "Clark", "Lawrence", "Moultrie", "Clay", "Cumberland", "Jasper",
+        "Williamson", "Jackson", "Franklin", "Jefferson", "Saline", "Perry", "Union", "Wayne", "Massac", "White", "Johnson", "Wabash", "Hamilton", "Edwards", "Pulaski", "Gallatin", "Alexander", "Pope", "Hardin"
+    ]
   },
   {
     "name": "230 HOLLOWAY SALES GROUP LLC (MW)",
@@ -375,13 +377,6 @@
     "lat": 35.740848,
     "lng": -81.209458,
     "state": "North Carolina"
-  },
-  {
-    "name": "230 HOLLOWAY SALES GROUP LLC (SOUTH)",
-    "lat": 30.428781,
-    "lng": -87.222516,
-    "state": "Florida",
-    "region": "Northern"
   },
   {
     "name": "ALI ANGLE",
