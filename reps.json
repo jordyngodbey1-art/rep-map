@@ -43,7 +43,7 @@
   {
     "name": "20 B.E.S.T INC",
     "state": "New York",
-    "counties": [ "Delaware", "Sullivan", "Ulster", "Rockland", "Westchester","Nassau","Suffolk","Bronx", "Kings","New York","Richmond","Queens","Dutchess","Orange","Putnam" ]
+    "counties": ["Delaware", "Sullivan", "Ulster", "Rockland", "Westchester","Nassau","Suffolk","Bronx", "Kings","New York","Richmond","Queens","Dutchess","Orange","Putnam" ]
   },
   {
     "name": "250 ROOFING INNOVATIONS LLC",
@@ -112,12 +112,6 @@
         "Brunswick", "Buckingham", "Charlotte", "Cumberland", "Greensville", 
         "Halifax", "Lunenburg", "Mecklenburg", "Nottoway", "Prince Edward"
     ]
-  },
-  {
-    "name": "255 INNOVATIVE BUILDING SOLUTION INC",
-    "lat": 39.296536,
-    "lng": -76.623489,
-    "state": "Maryland"
   },
   {
     "name": "243 MRC SOLUTIONS LLC",
@@ -325,12 +319,6 @@
     "state": "Indiana"
   },
   {
-    "name": "201 MARKET MAKERS INC",
-    "lat": 29.837562,
-    "lng": -95.733756,
-    "state": "Texas"
-  },
-  {
     "name": "247 SHERMACH SALES LLC",
     "lat": 44.751113,
     "lng": -93.367975,
@@ -386,17 +374,25 @@
   },
   {
     "name": "269 AT WATERPROOFING SOLUTIONS",
-    "lat": 33.888315,
-    "lng": -118.295256,
     "state": "California",
-    "region": "Southern"
+    "counties": [
+    "Santa Barbara", "Santa Cruz", "Ventura", "Fresno", "Inyo", 
+    "Kern", "Kings", "Tulare", "Riverside", "San Bernardino", 
+    "Los Angeles", "Orange", "Imperial", "San Diego"
+  ]
   },
   {
     "name": "242 MILLER & SONS ROOFING SOLUTIONS",
-    "lat": 37.986421,
-    "lng": -122.134976,
     "state": "California",
-    "region": "Northern"
+  "counties": [
+    "Butte", "Colusa", "El Dorado", "Glenn", "Lassen", "Modoc", "Nevada", "Placer", 
+    "Plumas", "Sacramento", "Shasta", "Sierra", "Siskiyou", "Sutter", "Tehama", 
+    "Yolo", "Yuba", "Del Norte", "Humboldt", "Lake", "Mendocino", "Napa", "Sonoma", 
+    "Trinity", "Alameda", "Contra Costa", "Marin", "San Francisco", "San Mateo", 
+    "Santa Clara", "Solano", "Monterey", "San Benito", "San Luis Obispo", "Alpine", 
+    "Amador", "Calaveras", "Madera", "Mariposa", "Merced", "Mono", "San Joaquin", 
+    "Stanislaus", "Tuolumne"
+  ]
   },
   {
     "name": "201 ROOFING SOLUTIONS GROUP (W)",
