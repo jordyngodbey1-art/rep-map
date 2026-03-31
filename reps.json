@@ -1,68 +1,113 @@
 [
   {
     "name": "262 RIVERSIDE SALES",
-    "state": "Florida",
-    "counties": ["Calhoun", "Gulf", "Liberty", "Gadsden", "Franklin", "Wakulla", "Leon", "Jefferson", "Madison", "Taylor", "Lafayette", "Hamilton", "Suwannee", "Dixie", "Gilchrist", "Columbia", "Baker", "Union", "Bradford", "Alachua", "Levy", "Nassau", "Duval", "Clay", "St. Johns", "Putnam", "Flagler", "Marion", "Citrus", "Volusia", "Lake", "Sumter", "Seminole", "Brevard"]
+    "country": "USA",
+    "region": "Southeastern USA"
+    "centroid": {"lat": 29.563902 , "lng": -82.435813},
+    "coverage": 
+    {
+    "Florida": ["Calhoun", "Gulf", "Liberty", "Gadsden", "Franklin", "Wakulla", "Leon", "Jefferson", "Madison", "Taylor", "Lafayette", "Hamilton", "Suwannee", "Dixie", "Gilchrist", "Columbia", "Baker", "Union", "Bradford", "Alachua", "Levy", "Nassau", "Duval", "Clay", "St. Johns", "Putnam", "Flagler", "Marion", "Citrus", "Volusia", "Lake", "Sumter", "Seminole", "Brevard"]
+    }
   },
    {
     "name": "230 HOLLOWAY SALES GROUP LLC (MW)",
-    "state": "Florida",
-    "counties": ["Escambia", "Santa Rosa", "Okaloosa", "Walton", "Holmes", "Washington", "Bay", "Jackson"]
+    "country": "USA",
+     "region": "Southeastern USA",
+    "centroid": {"lat": 32.398516 , "lng": -88.703223},
+    "coverage": 
+   { 
+     "Florida": ["Escambia", "Santa Rosa", "Okaloosa", "Walton", "Holmes", "Washington", "Bay", "Jackson"],
+     "Alabama": "ALL",
+     "Mississippi": "ALL",
+     "Louisiana": "ALL"
+   }
   },
     {
     "name": "236 THE SCARLETTE GROUP",
-    "state": "Florida",
-    "counties": ["Hernando", "Pasco", "Pinellas", "Polk", "Orange", "Osceola", "Manatee", "Sarasota", "Hardee", "Desoto", "Charlotte", "Highlands", "Okeechobee", "Indian River", "St. Lucie"]
+    "country": "USA",
+    "region": "Southeastern USA"
+    "centroid": {"lat": 27.498527, "lng": -82.306778},
+    "coverage": 
+  {
+    "Florida": ["Hernando", "Pasco", "Pinellas", "Polk", "Orange", "Osceola", "Manatee", "Sarasota", "Hardee", "Desoto", "Charlotte", "Highlands", "Okeechobee", "Indian River", "St. Lucie"]
+  }
   },
     {
     "name": "237 JC MOONS & ASSOCIATES",
-    "state": "Florida",
-    "counties": ["Hillsborough", "Martin", "Glades", "Lee", "Hendry", "Palm Beach", "Broward", "Collier", "Monroe", "Dade"]
-  },
+    "country": "USA",
+    "region": "Southeastern USA"
+    "centroid": {"lat": 25.780107, "lng": -80.790667},
+    "coverage": 
   {
+    "Florida": ["Hillsborough", "Martin", "Glades", "Lee", "Hendry", "Palm Beach", "Broward", "Collier", "Monroe", "Dade"]
+  }
+  },
+    {
     "name": "257 COMMERCIAL ROOFING SOLUTIONS LLC",
-    "lat": 40.877949,
-    "lng": -74.141237,
-    "state": "New Jersey"
+    "country": "USA",
+    "region": "Mid-Atlantic USA"
+    "centroid": { "lat": 40.341311, "lng": -74.465332 }
+    "coverage": 
+  {
+    "New Jersey": "ALL"
+  }
   },
   {
     "name": "E258",
-    "state": "Texas",
-   "counties": ["Armstrong", "Carson", "Dallam", "Deaf Smith", "Gray", "Hansford", "Hartley", "Hemphill", "Hutchinson", "Lipscomb", "Moore", "Ochiltree", "Oldham", "Potter", "Randall", "Roberts", "Sherman", "Briscoe", "Childress", "Collingsworth", "Cottle", "Dickens", "Donley", "Foard", "Hall", "Hardeman", "King", "Knox", "Motley", "Wheeler", "Bailey", "Castro", "Cochran", "Crosby", "Dawson", "Floyd", "Gaines", "Garza", "Hale", "Hockley", "Lamb", "Lubbock", "Lynn", "Parmer", "Swisher", "Terry", "Yoakum", "Borden", "Callahan", "Fisher", "Haskell", "Howard", "Jones", "Kent", "Mitchell", "Nolan", "Scurry", "Shackelford", "Stonewall", "Taylor", "Archer", "Baylor", "Clay", "Cooke", "Montague", "Throckmorton", "Wichita", "Wilbarger", "Young", "Delta", "Fannin", "Franklin", "Grayson", "Hopkins", "Hunt", "Lamar", "Rains", "Red River", "Bowie", "Camp", "Cass", "Harrison", "Marion", "Morris", "Panola", "Titus", "Upshur", "Anderson", "Cherokee", "Gregg", "Henderson", "Rusk", "Smith", "Van Zandt", "Wood", "Angelina", "Houston", "Nacogdoches", "Polk", "Sabine", "San Augustine", "San Jacinto", "Shelby", "Trinity", "Erath", "Hood", "Jack", "Johnson", "Palo Pinto", "Parker", "Somervell", "Tarrant", "Wise", "Collin", "Dallas", "Denton", "Ellis", "Kaufman", "Navarro", "Rockwall", "Bell", "Bosque", "Coryell", "Falls", "Hamilton", "Hill", "Limestone", "McLennan", "Andrews", "Martin", "Loving", "Winkler", "Ector", "Midland"]
-  },
+    "country": "USA",
+    "region": "South Central"
+    "centroid": { "lat": 34.755153, "lng": -101.469727 }
+    "coverage": 
+    { 
+      "Texas": [ "Armstrong" , "Carson", "Dallam", "Deaf Smith", "Gray", "Hansford", "Hartley", "Hemphill", "Hutchinson", "Lipscomb", "Moore", "Ochiltree", "Oldham", "Potter", "Randall", "Roberts", "Tyler", "Sherman", "Briscoe", "Childress", "Collingsworth", "Cottle", "Dickens", "Donley", "Foard", "Hall", "Hardeman", "King", "Knox", "Motley", "Wheeler", "Bailey", "Castro", "Cochran", "Crosby", "Dawson", "Floyd", "Gaines", "Garza", "Hale", "Hockley", "Lamb", "Lubbock", "Lynn", "Parmer", "Swisher", "Terry", "Yoakum", "Borden", "Callahan", "Fisher", "Haskell", "Howard", "Jones", "Kent", "Mitchell", "Nolan", "Scurry", "Shackelford", "Stonewall", "Taylor", "Archer", "Baylor", "Clay", "Cooke", "Montague", "Throckmorton", "Wichita", "Wilbarger", "Young", "Delta", "Fannin", "Franklin", "Grayson", "Hopkins", "Hunt", "Lamar", "Rains", "Red River", "Bowie", "Camp", "Cass", "Harrison", "Marion", "Morris", "Panola", "Titus", "Upshur", "Anderson", "Cherokee", "Gregg", "Henderson", "Rusk", "Smith", "Van Zandt", "Wood", "Angelina", "Houston", "Nacogdoches", "Polk", "Sabine", "San Augustine", "San Jacinto", "Shelby", "Trinity", "Erath", "Hood", "Jack", "Johnson", "Palo Pinto", "Parker", "Somervell", "Tarrant", "Wise", "Collin", "Dallas", "Denton", "Ellis", "Kaufman", "Navarro", "Rockwall", "Bell", "Bosque", "Coryell", "Falls", "Hamilton", "Hill", "Limestone", "McLennan", "Andrews", "Martin", "Loving", "Winkler", "Ector", "Midland"]
+    }
+    },
    {
     "name": "201 MARKET MAKERS INC",
+     "country": "USA",
     "state": "Texas",
-    "counties": ["Bastrop", "Blanco", "Burnet", "Caldwell", "Gillespie", "Hays", "Lee", "Llano", "Mason", "Travis", "Williamson", "Chambers", "Hardin", "Jasper", "Jefferson", "Liberty", "Newton", "Orange", "Tyler", "Brown", "Coleman", "Comanche", "Eastland", "Lampasas", "McCulloch", "Mills", "San Saba", "Stephens", "Brazos", "Burleson", "Freestone", "Grimes", "Leon", "Madison", "Milam", "Robertson", "Walker", "Washington", "Aransas", "Bee", "Goliad", "Jim Wells", "Karnes", "Kleberg", "Live Oak", "Nueces", "Refugio", "San Patricio", "Brewster", "Culberson", "El Paso", "Hudspeth", "Jeff Davis", "Presidio", "Erath", "Hood", "Jack", "Johnson", "Palo Pinto", "Parker", "Somervell", "Tarrant", "Wise", "Brazoria", "Fort Bend", "Galveston", "Harris", "Montgomery", "Waller", "Dimmit", "Duval", "Kinney", "La Salle", "Maverick", "Val Verde", "Webb", "Zavala", "Austin", "Calhoun", "Colorado", "DeWitt", "Fayette", "Gonzales", "Jackson", "Lavaca", "Matagorda", "Victoria", "Wharton", "Coke", "Concho", "Crockett", "Edwards", "Glasscock", "Irion", "Kimble", "Menard", "Reagan", "Real", "Runnels", "Schleicher", "Sterling", "Sutton", "Tom Green", "Atascosa", "Bandera", "Bexar", "Comal", "Frio", "Guadalupe", "Kendall", "Kerr", "McMullen", "Medina", "Uvalde", "Wilson", "Brooks", "Cameron", "Hidalgo", "Jim Hogg", "Kenedy", "Starr", "Willacy", "Zapata", "Reeves", "Ward", "Crane", "Upton", "Pecos", "Terrell"]
+    "counties": ["Bastrop", "Blanco", "Burnet", "Caldwell", "Gillespie", "Hays", "Lee", "Llano", "Mason", "Travis", "Williamson", "Chambers", "Hardin", "Jasper", "Jefferson", "Liberty", "Newton", "Orange",  "Brown", "Coleman", "Comanche", "Eastland", "Lampasas", "McCulloch", "Mills", "San Saba", "Stephens", "Brazos", "Burleson", "Freestone", "Grimes", "Leon", "Madison", "Milam", "Robertson", "Walker", "Washington", "Aransas", "Bee", "Goliad", "Jim Wells", "Karnes", "Kleberg", "Live Oak", "Nueces", "Refugio", "San Patricio", "Brewster", "Culberson", "El Paso", "Hudspeth", "Jeff Davis", "Presidio", "Erath", "Hood", "Jack", "Johnson", "Palo Pinto", "Parker", "Somervell", "Tarrant", "Wise", "Brazoria", "Fort Bend", "Galveston", "Harris", "Montgomery", "Waller", "Dimmit", "Duval", "Kinney", "La Salle", "Maverick", "Val Verde", "Webb", "Zavala", "Austin", "Calhoun", "Colorado", "DeWitt", "Fayette", "Gonzales", "Jackson", "Lavaca", "Matagorda", "Victoria", "Wharton", "Coke", "Concho", "Crockett", "Edwards", "Glasscock", "Irion", "Kimble", "Menard", "Reagan", "Real", "Runnels", "Schleicher", "Sterling", "Sutton", "Tom Green", "Atascosa", "Bandera", "Bexar", "Comal", "Frio", "Guadalupe", "Kendall", "Kerr", "McMullen", "Medina", "Uvalde", "Wilson", "Brooks", "Cameron", "Hidalgo", "Jim Hogg", "Kenedy", "Starr", "Willacy", "Zapata", "Reeves", "Ward", "Crane", "Upton", "Pecos", "Terrell"]
   },
   {
     "name": "240 KENEFIC SALES ASSOCIATES",
-    "state": "Pennsylvania",
-    "counties": ["Adams", "Lancaster", "Lebanon", "Lycoming", "Mifflin", "Montour", "Centre", "Northumberland", "Perry", "Clinton", "Columbia", "Cumberland", "Snyder", "Dauphin", "Somerset", "Union", "Franklin", "Fulton", "Huntingdon", "York", "Juniata", "Lackawanna", "Lehigh", "Berks", "Luzerne", "Bradford", "Monroe", "Carbon", "Northampton", "Pike", "Schuylkill", "Sullivan", "Susquehanna", "Tioga", "Wayne", "Wyoming", "Bucks", "Montgomery", "Chester", "Philadelphia", "Delaware"]
-  },
+    "country": "USA",
+    "region": "Mid-Atlantic",
+    "centroid": { "lat": 40.869911, "lng": -75.959473 },
+    "coverage": {
+    "Pennsylvania": ["Adams", "Lancaster", "Lebanon", "Lycoming", "Mifflin", "Montour", "Centre", "Northumberland", "Perry", "Clinton", "Columbia", "Cumberland", "Snyder", "Dauphin", "Somerset", "Union", "Franklin", "Fulton", "Huntingdon", "York", "Juniata", "Lackawanna", "Lehigh", "Berks", "Luzerne", "Bradford", "Monroe", "Carbon", "Northampton", "Pike", "Schuylkill", "Sullivan", "Susquehanna", "Tioga", "Wayne", "Wyoming", "Bucks", "Montgomery", "Chester", "Philadelphia", "Delaware"]
+    }
+    },
   {
     "name": "20 B.E.S.T INC",
-    "state": "New York",
-    "counties": ["Delaware", "Sullivan", "Ulster", "Rockland", "Westchester","Nassau","Suffolk","Bronx", "Kings","New York","Richmond","Queens","Dutchess","Orange","Putnam" ]
+    "country": "USA",
+    "region": "Mid-Atlantic",
+    "centroid": { "lat": 40.703025, "lng": -73.624878 }
+    "coverage": 
+    {
+    "New York": ["Delaware", "Sullivan", "Ulster", "Rockland", "Westchester","Nassau","Suffolk","Bronx", "Kings","New York","Richmond","Queens","Dutchess","Orange","Putnam" ]
+    }
   },
   {
     "name": "250 ROOFING INNOVATIONS LLC",
+    "country": "USA",
+    "region": "Mid=Atlantic",
     "state": "New York",
     "counties": ["Albany", "Columbia", "Fulton", "Greene", "Montgomery", "Rensselaer", "Saratoga", "Schenectady", "Schoharie", "Warren", "Washington", "Franklin", "Clinton", "Essex", "Hamilton", "Herkimer", "Jefferson", "Lewis", "Oneida", "Oswego", "St. Lawrence", "Broome", "Cayuga", "Chenango", "Cortland", "Madison", "Onondaga", "Otsego", "Tioga", "Tompkins", "Chemung", "Genesee", "Livingston", "Monroe", "Ontario", "Schuyler", "Seneca", "Steuben", "Wayne", "Yates", "Allegany", "Cattaraugus", "Chautauqua", "Erie", "Niagara", "Orleans", "Wyoming", "Dutchess", "Orange", "Putnam"]
   },
   {
     "name": "238 KENEFIC SALES ASSOCIATES",
+    "country": "USA",
     "state": "Pennsylvania",
     "counties": ["Bedford", "Blair", "Cambria", "Lawrence", "McKean", "Mercer", "Cameron", "Clarion", "Clearfield", "Potter", "Crawford", "Elk", "Erie", "Forest", "Venango", "Warren", "Jefferson", "Allegheny", "Armstrong", "Beaver", "Butler", "Fayette", "Washington", "Greene", "Westmoreland", "Indiana"]
   },
   {
     "name": "255 INNOVATIVE BUILDING SOLUTION INC",
-    "lat": 39.296536,
-    "lng": -76.623489,
+    "country": "USA",
     "state": "Maryland"
   },
   {
     "name": "255 INNOVATIVE BUILDING SOLUTION INC",
+    "country": "USA",
     "state": "Virginia",
     "counties": [
         "Alexandria",
@@ -75,18 +120,17 @@
   },
   {
     "name": "257 COMMERCIAL ROOFING SOLUTIONS LLC",
-    "lat": 39.715668,
-    "lng": -75.640762,
+    "country": "USA",
     "state": "Delaware"
   },
   {
     "name": "243 MRC SOLUTIONS LLC",
-    "lat": 41.207146,
-    "lng": -73.130503,
+    "country": "USA",
     "state": "Connecticut"
   },
   {
     "name": "226 THE GEMROI COMPANY",
+    "country": "USA",
     "state": "Virginia",
     "counties": [
         "Charles City", "Chesterfield", "Colonial Heights", "Dinwiddie", "Goochland", 
@@ -115,60 +159,52 @@
   },
   {
     "name": "243 MRC SOLUTIONS LLC",
-    "lat": 41.81835,
-    "lng": -71.424851,
+    "country": "USA",
     "state": "Rhode Island"
   },
   {
     "name": "243 MRC SOLUTIONS LLC",
-    "lat": 41.726343,
-    "lng": -71.120746,
+    "country": "USA",
     "state": "Massachusetts"
   },
   {
-    "name": "254 ROOFING&EXTERIOR PROD SERVICES N",
-    "lat": 38.371727,
-    "lng": -82.412866,
+    "name": "Josh Hission",
+    "country": "USA",
     "state": "West Virginia"
   },
   {
     "name": "243 MRC SOLUTIONS LLC",
-    "lat": 40.33757,
-    "lng": -79.809213,
+    "country": "USA",
     "state": "New Hampshire"
   },
   {
     "name": "243 MRC SOLUTIONS LLC",
-    "lat": 44.086323,
-    "lng": -70.169297,
+    "country": "USA",
     "state": "Maine"
   },
   {
     "name": "157 B.R.A.V. ENTERPRISES",
-    "lat": 43.237691,
-    "lng": -86.254186,
+    "country": "USA",
     "state": "Michigan"
   },
   {
     "name": "143 DIVISION 7 SALES INC",
-    "lat": 39.103053,
-    "lng": -94.630384,
+    "country": "USA",
     "state": "Missouri"
   },
   {
     "name": "206 DIVERSIFIED RFG SOLUTIONS INC",
-    "lat": 44.480778,
-    "lng": -88.016063,
+    "country": "USA",
     "state": "Wisconsin"
   },
   {
     "name": "256 ROOFING&EXTERIOR PROD. SERVICES.",
-    "lat": 41.720684,
-    "lng": -83.569359,
+    "country": "USA",
     "state": "Ohio"
   },
   {
     "name": "245 A & D PRODUCTS",
+    "country": "USA",
     "state": "Illinois",
     "counties": [
         "Winnebago",
@@ -189,105 +225,103 @@
   },
   {
     "name": "267 WALCO LLC",
-    "lat": 35.491608,
-    "lng": -97.562817,
+    "country": "USA",
     "state": "Oklahoma"
   },
   {
     "name": "267 WALCO LLC",
-    "lat": 36.063095,
-    "lng": -95.804231,
+    "country": "USA",
     "state": "Arkansas"
   },
   {
     "name": "218 FIVE STAR PRODUCTS INC",
-    "lat": 41.673383,
-    "lng": -86.251654,
+    "country": "USA",
     "state": "Indiana",
-    "region": "Southern"
+    "counties": [
+    "Adams", "Allen", "Bartholomew", "Blackford", "Boone", "Brown", "Carroll", 
+    "Cass", "Clark", "Clay", "Clinton", "Crawford", "Daviess", "Dearborn", 
+    "Decatur", "DeKalb", "Delaware", "Dubois", "Elkhart", "Fayette", "Floyd", 
+    "Fountain", "Franklin", "Fulton", "Gibson", "Grant", "Greene", "Hamilton", 
+    "Hancock", "Harrison", "Hendricks", "Henry", "Howard", "Huntington", 
+    "Jackson", "Jasper", "Jay", "Jefferson", "Jennings", "Johnson", "Knox", 
+    "Kosciusko", "LaGrange", "LaPorte", "Lawrence", "Madison", "Marion", 
+    "Marshall", "Martin", "Miami", "Monroe", "Montgomery", "Morgan", "Noble", 
+    "Ohio", "Orange", "Owen", "Parke", "Perry", "Pike", "Porter", "Posey", 
+    "Pulaski", "Putnam", "Randolph", "Ripley", "Rush", "St. Joseph", "Scott", 
+    "Shelby", "Spencer", "Starke", "Steuben", "Sullivan", "Switzerland", 
+    "Tippecanoe", "Tipton", "Union", "Vanderburgh", "Vermillion", "Vigo", 
+    "Wabash", "Warren", "Warrick", "Washington", "Wayne", "Wells", "White", 
+    "Whitley"
+  ]
   },
   {
     "name": "230 HOLLOWAY SALES GROUP LLC (MW)",
-    "lat": 32.502833,
-    "lng": -92.094583,
+    "country": "USA",
     "state": "Louisiana"
   },
   {
     "name": "143 DIVISION 7 SALES INC",
-    "lat": 37.785545,
-    "lng": -90.443298,
+    "country": "USA",
     "state": "Missouri"
   },
   {
     "name": "254 ENGINEERED SYSTEMS",
-    "lat": 38.25247,
-    "lng": -85.753812,
+    "country": "USA",
     "state": "Kentucky"
   },
   {
     "name": "256 ROOFING&EXTERIOR PROD. SERVICES.",
-    "lat": 41.489381,
-    "lng": -81.667486,
+    "country": "USA",
     "state": "Ohio"
   },
   {
     "name": "230 HOLLOWAY SALES GROUP LLC (MW)",
-    "lat": 29.972705,
-    "lng": -91.975677,
+    "country": "USA",
     "state": "Louisiana"
   },
   {
     "name": "267 WALCO LLC",
-    "lat": 34.766561,
-    "lng": -92.262899,
+    "country": "USA",
     "state": "Arkansas"
   },
   {
     "name": "206 DIVERSIFIED RFG SOLUTIONS INC",
-    "lat": 44.963304,
-    "lng": -89.704051,
+    "country": "USA",
     "state": "Wisconsin"
   },
   {
     "name": "261 ROOFING REPRESENTATIVES",
-    "lat": 41.672687,
-    "lng": -93.572173,
+    "country": "USA",
     "state": "Iowa"
   },
   {
     "name": "261 ROOFING REPRESENTATIVES",
-    "lat": 41.262003,
-    "lng": -95.933564,
+    "country": "USA",
     "state": "Nebraska"
   },
   {
     "name": "143 DIVISION 7 SALES INC",
-    "lat": 37.651974,
-    "lng": -97.258997,
+    "country": "USA",
     "state": "Kansas"
   },
   {
     "name": "230 HOLLOWAY SALES GROUP LLC (MW)",
-    "lat": 32.498202,
-    "lng": -93.750228,
+    "country": "USA",
     "state": "Mississippi"
   },
   {
     "name": "254 ROOFING&EXTERIOR PROD SERVICES",
-    "lat": 39.268114,
-    "lng": -84.413275,
+    "country": "USA",
     "state": "Ohio"
   },
   {
     "name": "254 ENGINEERED SYSTEMS",
-    "lat": 38.016674,
-    "lng": -84.486043,
+    "country": "USA",
     "state": "Kentucky"
   },
   {
     "name": "248 DIVISION 7 SALES INC.",
-    "lat": 40.678193,
-    "lng": -89.548486,
+    "country": "USA",
     "state": "Illinois"
    "counties": [
         "Rock Island", "La Salle", "Whiteside", "Henry", "Lee", "Bureau", "Jo Daviess", "Carroll", "Mercer", "Putnam",
@@ -302,78 +336,48 @@
   },
   {
     "name": "230 HOLLOWAY SALES GROUP LLC (MW)",
-    "lat": 30.44924,
-    "lng": -91.185607,
+    "country": "USA",
     "state": "Alabama"
   },
   {
     "name": "247  SHERMACH SALES LLC",
-    "lat": 44.16608,
-    "lng": -92.53491,
+    "country": "USA",
     "state": "Minnesota"
   },
   {
-    "name": "218 FIVE STAR PRODUCTS INC",
-    "lat": 39.07881,
-    "lng": -86.435094,
-    "state": "Indiana"
-  },
-  {
-    "name": "247 SHERMACH SALES LLC",
-    "lat": 44.751113,
-    "lng": -93.367975,
-    "state": "Minnesota"
-  },
-  {
-    "name": "230 HOLLOWAY SALES GROUP LLC (MW)",
-    "lat": 31.274156,
-    "lng": -92.467107,
-    "state": "Alabama"
+    "name": "245 A & D PRODUCTS",
+    "country": "USA",
+    "state": "Indiana",
+    "counties": ["Benton, Lake, Newton"]
   },
   {
     "name": "142 W.R. WALSH INC",
-    "lat": 35.773632,
-    "lng": -78.634457,
+    "country": "USA",
     "state": "North Carolina"
   },
   {
     "name": "142 W.R. WALSH INC",
-    "lat": 36.069144,
-    "lng": -79.765156,
+    "country": "USA",
     "state": "South Carolina"
   },
   {
     "name": "178 LAGOD CONSTRUCTION PRODUCTS",
-    "lat": 35.050667,
-    "lng": -89.847782,
+    "country": "USA",
     "state": "Tennessee"
   },
   {
     "name": "178 LAGOD CONSTRUCTION PRODUCTS",
-    "lat": 32.472864,
-    "lng": -84.97823,
+    "country": "USA",
     "state": "Georgia"
   },
   {
-    "name": "178 LAGOD CONSTRUCTION PRODUCTS",
-    "lat": 36.032334,
-    "lng": -83.884804,
-    "state": "Tennessee"
-  },
-  {
-    "name": "142 W.R. WALSH INC",
-    "lat": 35.740848,
-    "lng": -81.209458,
-    "state": "North Carolina"
-  },
-  {
     "name": "ALI ANGLE",
-    "lat": 33.703967,
-    "lng": -112.351835,
+    "country": "USA",
     "state": "Arizona"
   },
   {
     "name": "269 AT WATERPROOFING SOLUTIONS",
+    "country": "USA",
     "state": "California",
     "counties": [
     "Santa Barbara", "Santa Cruz", "Ventura", "Fresno", "Inyo", 
@@ -383,6 +387,7 @@
   },
   {
     "name": "242 MILLER & SONS ROOFING SOLUTIONS",
+    "country": "USA",
     "state": "California",
   "counties": [
     "Butte", "Colusa", "El Dorado", "Glenn", "Lassen", "Modoc", "Nevada", "Placer", 
@@ -396,116 +401,82 @@
   },
   {
     "name": "201 ROOFING SOLUTIONS GROUP (W)",
-    "lat": 35.199592,
-    "lng": -106.644831,
+    "country": "USA",
     "state": "New Mexico"
   },
   {
     "name": "180 WELLER ASSOCIATES",
-    "lat": 47.988661,
-    "lng": -122.199795,
+    "country": "USA",
     "state": "Washington"
   },
   {
     "name": "180 WELLER ASSOCIATES",
-    "lat": 45.507856,
-    "lng": -122.690794,
+    "country": "USA",
     "state": "Oregon"
   },
   {
     "name": "TYSON SMITH",
-    "lat": 21.316548,
-    "lng": -157.845053,
+    "country": "USA",
     "state": "Hawaii"
   },
   {
     "name": "259 DJS ENTERPRISES INC.",
-    "lat": 40.666892,
-    "lng": -111.887991,
+    "country": "USA",
     "state": "Utah"
   },
   {
     "name": "TYSON SMITH",
-    "lat": 36.17372,
-    "lng": -115.10647,
+    "country": "USA",
     "state": "Nevada"
   },
   {
     "name": "247  SHERMACH SALES LLC",
-    "lat": 47.532424,
-    "lng": -92.107672,
+    "country": "USA",
     "state": "Minnesota"
   },
   {
     "name": "246 DJS ENTERPRISES INC",
-    "lat": 45.686966,
-    "lng": -108.387392,
+    "country": "USA",
     "state": "Montana"
   },
   {
     "name": "259 DJS ENTERPRISES INC.",
-    "lat": 43.603768,
-    "lng": -116.272921,
+    "country": "USA",
     "state": "Colorado"
   },
   {
     "name": "254 ENGINEERED SYSTEMS",
-    "lat": 38.25247,
-    "lng": -85.753812,
+    "country": "USA",
     "state": "Kentucky"
   },
   {
     "name": "DREW NEWMAN",
-    "lat": 54.741634368896484,
-    "lng": -105.98660278320312,
-    "state": "Saskatchewan"
-  },
-  {
-    "name": "DREW NEWMAN",
-    "lat": 55.001251,
-    "lng": -115.002136,
-    "state": "Alberta"
-  },
-  {
-    "name": "DREW NEWMAN",
-    "lat": 54.91703414916992,
-    "lng": -125.9527359008789,
-    "state": "British Columbia"
-  },
-  {
-    "name": "DREW NEWMAN",
-    "lat": 55.001251,
-    "lng": -97.001038,
-    "state": "Manitoba"
+    "country": "Canada"
+    "province": ["Alberta, Manitoba, British Columbia, Saskatchewan"]
   },
   {
     "name": "157 BRAV",
-    "lat": 50.000678,
-    "lng": -86.000977,
-    "state": "Ontario"
+    "country": "Canada",
+    "province": "Ontario"
   },
   {
     "name": "TODD HARRIS",
-    "lat": 52.4760892,
-    "lng": -71.8258668,
-    "state": "Quebec"
+    "country": "Canada",
+    "province": "Quebec"
   },
   {
     "name": "TODD HARRIS",
-    "lat": 53.64021301269531,
-    "lng": -60.14176940917969,
-    "state": "Newfoundland and Labrador"
+    "country": "Canada",
+    "province": "Newfoundland and Labrador"
   },
   {
     "name": "TODD HARRIS",
-    "lat": 45.1960403,
-    "lng": -63.1653789,
-    "state": "Nova Scotia"
+    "country" "Canada",
+    "province": "Nova Scotia"
   },
   {
     "name": "259 DJS ENTERPRISES INC.",
-    "lat": 42.8501191,
-    "lng": -106.325138,
+    "country": "USA",
     "state": "Wyoming"
   }
 ]
