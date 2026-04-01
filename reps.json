@@ -75,6 +75,7 @@
     "centroid": { "lat": 40.869911, "lng": -75.959473 },
     "coverage": {
     "Pennsylvania": ["Adams", "Lancaster", "Lebanon", "Lycoming", "Mifflin", "Montour", "Centre", "Northumberland", "Perry", "Clinton", "Columbia", "Cumberland", "Snyder", "Dauphin", "Somerset", "Union", "Franklin", "Fulton", "Huntingdon", "York", "Juniata", "Lackawanna", "Lehigh", "Berks", "Luzerne", "Bradford", "Monroe", "Carbon", "Northampton", "Pike", "Schuylkill", "Sullivan", "Susquehanna", "Tioga", "Wayne", "Wyoming", "Bucks", "Montgomery", "Chester", "Philadelphia", "Delaware"]
+    "Delaware": "ALL"
     }
     },
   {
@@ -90,102 +91,76 @@
   {
     "name": "250 ROOFING INNOVATIONS LLC",
     "country": "USA",
-    "region": "Mid=Atlantic",
-    "state": "New York",
-    "counties": ["Albany", "Columbia", "Fulton", "Greene", "Montgomery", "Rensselaer", "Saratoga", "Schenectady", "Schoharie", "Warren", "Washington", "Franklin", "Clinton", "Essex", "Hamilton", "Herkimer", "Jefferson", "Lewis", "Oneida", "Oswego", "St. Lawrence", "Broome", "Cayuga", "Chenango", "Cortland", "Madison", "Onondaga", "Otsego", "Tioga", "Tompkins", "Chemung", "Genesee", "Livingston", "Monroe", "Ontario", "Schuyler", "Seneca", "Steuben", "Wayne", "Yates", "Allegany", "Cattaraugus", "Chautauqua", "Erie", "Niagara", "Orleans", "Wyoming", "Dutchess", "Orange", "Putnam"]
+    "region": "Mid-Atlantic",
+    "centroid": { "lat": 43.076913, "lng": -75.975935 }
+    "coverage": 
+    {
+    "New York": ["Albany", "Columbia", "Fulton", "Greene", "Montgomery", "Rensselaer", "Saratoga", "Schenectady", "Schoharie", "Warren", "Washington", "Franklin", "Clinton", "Essex", "Hamilton", "Herkimer", "Jefferson", "Lewis", "Oneida", "Oswego", "St. Lawrence", "Broome", "Cayuga", "Chenango", "Cortland", "Madison", "Onondaga", "Otsego", "Tioga", "Tompkins", "Chemung", "Genesee", "Livingston", "Monroe", "Ontario", "Schuyler", "Seneca", "Steuben", "Wayne", "Yates", "Allegany", "Cattaraugus", "Chautauqua", "Erie", "Niagara", "Orleans", "Wyoming", "Dutchess", "Orange", "Putnam"]
+    }
   },
   {
     "name": "238 KENEFIC SALES ASSOCIATES",
     "country": "USA",
-    "state": "Pennsylvania",
-    "counties": ["Bedford", "Blair", "Cambria", "Lawrence", "McKean", "Mercer", "Cameron", "Clarion", "Clearfield", "Potter", "Crawford", "Elk", "Erie", "Forest", "Venango", "Warren", "Jefferson", "Allegheny", "Armstrong", "Beaver", "Butler", "Fayette", "Washington", "Greene", "Westmoreland", "Indiana"]
+    "region": "Mid-Atlantic",
+    "centroid": { "lat": 40.946714, "lng": -80.029783 }
+    "coverage": 
+    {
+    "Pennysylvania": ["Bedford", "Blair", "Cambria", "Lawrence", "McKean", "Mercer", "Cameron", "Clarion", "Clearfield", "Potter", "Crawford", "Elk", "Erie", "Forest", "Venango", "Warren", "Jefferson", "Allegheny", "Armstrong", "Beaver", "Butler", "Fayette", "Washington", "Greene", "Westmoreland", "Indiana"]
+    }
   },
   {
     "name": "255 INNOVATIVE BUILDING SOLUTION INC",
     "country": "USA",
-    "state": "Maryland"
-  },
-  {
-    "name": "255 INNOVATIVE BUILDING SOLUTION INC",
-    "country": "USA",
-    "state": "Virginia",
-    "counties": [
-        "Alexandria",
-        "Arlington",
-        "Clarke",
-        "Fairfax",
-        "Frederick",
-        "Prince William"
-    ]
-  },
-  {
-    "name": "257 COMMERCIAL ROOFING SOLUTIONS LLC",
-    "country": "USA",
-    "state": "Delaware"
+    "region": "Mid-Atlantic",
+    "centroid": { "lat": 38.749799 , "lng": -78.044076 }
+    "coverage": 
+    { 
+      "Virginia": [ "Alexandria", "Arlington", "Clarke", "Fairfax", "Frederick", "Prince William" ]
+      "Maryland": "ALL"
+    }
   },
   {
     "name": "243 MRC SOLUTIONS LLC",
     "country": "USA",
-    "state": "Connecticut"
+    "region": "Mid-Atlantic"
+    "centroid": { "lat": 43.866218, "lng": }
+    "coverage": 
+    {
+      "Connecticut": "ALL"
+      "Vermont": "ALL"
+      "Maine": "ALL"
+      "New Hampshire": "ALL"
+      "Massachusetts": "ALL"
+      "Rhode Island": "ALL"
+    }
   },
   {
     "name": "226 THE GEMROI COMPANY",
     "country": "USA",
-    "state": "Virginia",
-    "counties": [
-        "Charles City", "Chesterfield", "Colonial Heights", "Dinwiddie", "Goochland", 
-        "Hanover", "Henrico", "Hopewell", "New Kent", "Petersburg", "Powhatan", 
-        "Prince George", "Richmond", "Surry", "Sussex", "Accomack", "Chesapeake", 
-        "Franklin", "Hampton", "Isle of Wight", "James City", "Newport News", 
-        "Norfolk", "Northampton", "Poquoson", "Portsmouth", "Southampton", "Suffolk", 
-        "Virginia Beach", "Williamsburg-James City", "York", "Caroline", "Colonial Beach", 
-        "Essex", "Fredericksburg", "Gloucester", "King George", "King William", 
-        "King and Queen", "Lancaster", "Mathews", "Middlesex", "Northumberland", 
-        "Richmond", "Spotsylvania", "Stafford", "Westmoreland", "West Point", 
-        "Culpeper", "Falls Church", "Fauquier", "Loudoun", "Madison", "Manassas", 
-        "Manassas Park", "Orange", "Page", "Rappahannock", "Shenandoah", "Warren", 
-        "Winchester", "Albemarle", "Amherst", "Augusta", "Bath", "Bedford", 
-        "Buena Vista", "Campbell", "Charlottesville", "Fluvanna", "Greene", 
-        "Harrisonburg", "Highland", "Lexington", "Louisa", "Lynchburg", "Nelson", 
-        "Rockbridge", "Rockingham", "Staunton", "Waynesboro", "Alleghany Highlands", 
-        "Botetourt", "Craig", "Danville", "Floyd", "Franklin", "Henry", "Martinsville", 
-        "Montgomery", "Patrick", "Pittsylvania", "Roanoke", "Roanoke", "Salem", 
-        "Bland", "Buchanan", "Bristol", "Carroll", "Dickenson", "Galax", "Giles", 
-        "Grayson", "Lee", "Norton", "Pulaski", "Radford", "Russell", "Scott", 
-        "Smyth", "Tazewell", "Washington", "Wise", "Wythe", "Amelia", "Appomattox", 
-        "Brunswick", "Buckingham", "Charlotte", "Cumberland", "Greensville", 
-        "Halifax", "Lunenburg", "Mecklenburg", "Nottoway", "Prince Edward"
-    ]
+    "centroid": { "lat": 37.26531, "lng": -77.662137 }
+    "region": "Mid-Atlantic",
+    "coverage": 
+  {
+    "Virginia": [ "Charles City", "Chesterfield", "Colonial Heights", "Dinwiddie", "Goochland", "Hanover", "Henrico", "Hopewell", "New Kent", "Petersburg", "Powhatan", "Prince George", "Richmond", "Surry", "Sussex", "Accomack", "Chesapeake", "Franklin", "Hampton", "Isle of Wight", "James City", "Newport News", "Norfolk", "Northampton", "Poquoson", "Portsmouth", "Southampton", "Suffolk",  "Virginia Beach", "Williamsburg-James City", "York", "Caroline", "Colonial Beach", "Essex", "Fredericksburg", "Gloucester", "King George", "King William", "King and Queen", "Lancaster", "Mathews", "Middlesex", "Northumberland", "Richmond", "Spotsylvania", "Stafford", "Westmoreland", "West Point", "Culpeper", "Falls Church", "Fauquier", "Loudoun", "Madison", "Manassas", "Manassas Park", "Orange", "Page", "Rappahannock", "Shenandoah", "Warren", "Winchester", "Albemarle", "Amherst", "Augusta", "Bath", "Bedford", "Buena Vista", "Campbell", "Charlottesville", "Fluvanna", "Greene", "Harrisonburg", "Highland", "Lexington", "Louisa", "Lynchburg", "Nelson", "Rockbridge", "Rockingham", "Staunton", "Waynesboro", "Alleghany Highlands", "Botetourt", "Craig", "Danville", "Floyd", "Franklin", "Henry", "Martinsville", "Montgomery", "Patrick", "Pittsylvania", "Roanoke", "Roanoke", "Salem", "Bland", "Buchanan", "Bristol", "Carroll", "Dickenson", "Galax", "Giles", "Grayson", "Lee", "Norton", "Pulaski", "Radford", "Russell", "Scott", "Smyth", "Tazewell", "Washington", "Wise", "Wythe", "Amelia", "Appomattox", "Brunswick", "Buckingham", "Charlotte", "Cumberland", "Greensville", "Halifax", "Lunenburg", "Mecklenburg", "Nottoway", "Prince Edward"]
+   }
   },
   {
-    "name": "243 MRC SOLUTIONS LLC",
+    "name": "Josh Hissiom",
     "country": "USA",
-    "state": "Rhode Island"
-  },
-  {
-    "name": "243 MRC SOLUTIONS LLC",
-    "country": "USA",
-    "state": "Massachusetts"
-  },
-  {
-    "name": "Josh Hission",
-    "country": "USA",
-    "state": "West Virginia"
-  },
-  {
-    "name": "243 MRC SOLUTIONS LLC",
-    "country": "USA",
-    "state": "New Hampshire"
-  },
-  {
-    "name": "243 MRC SOLUTIONS LLC",
-    "country": "USA",
-    "state": "Maine"
+    "centroid": { "lat": 38.865375, "lng": -80.183602 }
+    "region": "Appalachian"
+    "coverage": 
+    { "West Virginia": "ALL" }
   },
   {
     "name": "157 B.R.A.V. ENTERPRISES",
     "country": "USA",
-    "state": "Michigan"
+    "centroid": { "lat": 43.261206, "lng": -84.715369 }
+    "region": "Midwest"
+    "coverage": 
+    {
+      "Michigan": "ALL"
+    }
   },
   {
     "name": "143 DIVISION 7 SALES INC",
@@ -195,7 +170,12 @@
   {
     "name": "206 DIVERSIFIED RFG SOLUTIONS INC",
     "country": "USA",
-    "state": "Wisconsin"
+    "region": " Midwestern"
+    "centroid": { "lat": 44.684277, "lng": -89.889725 }
+    "coverage": 
+    {
+    "Wisconsin": "ALL"
+    }
   },
   {
     "name": "256 ROOFING&EXTERIOR PROD. SERVICES.",
@@ -205,39 +185,33 @@
   {
     "name": "245 A & D PRODUCTS",
     "country": "USA",
-    "state": "Illinois",
-    "counties": [
-        "Winnebago",
-        "Boone",
-        "Ogle",
-        "Stephenson",
-        "Cook",
-        "DuPage",
-        "Lake",
-        "Will",
-        "Kane",
-        "McHenry",
-        "Kendall",
-        "Kankakee",
-        "DeKalb",
-        "Grundy"
-    ]
+    "region": "Midwestern",
+    "centroid": { "lat": 41.672912, "lng": -87.780438 },
+    "coverage": 
+    {
+    "Illinois": ["Winnebago", "Boone", "Ogle", "Stephenson", "Cook", "DuPage", "Lake", "Will", "Kane", "McHenry", "Kendall", "Kankakee", "DeKalb", "Grundy"]
+    "Indiana": ["Hammond"]
+    }
   },
   {
     "name": "267 WALCO LLC",
     "country": "USA",
-    "state": "Oklahoma"
-  },
-  {
-    "name": "267 WALCO LLC",
-    "country": "USA",
-    "state": "Arkansas"
+    "region": "Southern",
+    "centroid": { "lat": 35.137879, "lng": -94.635822 }
+    "coverage": 
+    {
+      "Oklahoma": "ALL"
+      "Arkansas": "ALL"
+    }
   },
   {
     "name": "218 FIVE STAR PRODUCTS INC",
     "country": "USA",
-    "state": "Indiana",
-    "counties": [
+    "region": "Midwestern"
+    "centroid": { "lat": 40.480381 , "lng": -86.286355 }
+    "counties": 
+    {
+    "Indiana": [
     "Adams", "Allen", "Bartholomew", "Blackford", "Boone", "Brown", "Carroll", 
     "Cass", "Clark", "Clay", "Clinton", "Crawford", "Daviess", "Dearborn", 
     "Decatur", "DeKalb", "Delaware", "Dubois", "Elkhart", "Fayette", "Floyd", 
@@ -253,6 +227,7 @@
     "Wabash", "Warren", "Warrick", "Washington", "Wayne", "Wells", "White", 
     "Whitley"
   ]
+    }
   },
   {
     "name": "230 HOLLOWAY SALES GROUP LLC (MW)",
