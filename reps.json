@@ -163,11 +163,6 @@
     }
   },
   {
-    "name": "143 DIVISION 7 SALES INC",
-    "country": "USA",
-    "state": "Missouri"
-  },
-  {
     "name": "206 DIVERSIFIED RFG SOLUTIONS INC",
     "country": "USA",
     "region": " Midwestern"
@@ -175,6 +170,7 @@
     "coverage": 
     {
     "Wisconsin": "ALL"
+    "Kansas": "ALL"
     }
   },
   {
@@ -190,7 +186,7 @@
     "coverage": 
     {
     "Illinois": ["Winnebago", "Boone", "Ogle", "Stephenson", "Cook", "DuPage", "Lake", "Will", "Kane", "McHenry", "Kendall", "Kankakee", "DeKalb", "Grundy"]
-    "Indiana": ["Hammond"]
+    "Indiana": ["Benton, Lake, Newton"]
     }
   },
   {
@@ -230,59 +226,44 @@
     }
   },
   {
-    "name": "230 HOLLOWAY SALES GROUP LLC (MW)",
-    "country": "USA",
-    "state": "Louisiana"
-  },
-  {
     "name": "143 DIVISION 7 SALES INC",
     "country": "USA",
-    "state": "Missouri"
+    "region": "South Central",
+    "centroid": { "lat": 38.411500, "lng": -94.658877 }
+    "coverage": 
+    {
+      "Missouri": "ALL"
+      "Oklahoma": "ALL"
+      "Kentucky": ["McCraken", "Ballard", "Carlisle", "Hickman", "Fulton", "Graves"]
+    }
   },
   {
     "name": "254 ENGINEERED SYSTEMS",
     "country": "USA",
-    "state": "Kentucky"
+    "region": " East South Central",
+    "centroid": { "lat": 37.320202, "lng": -85.039702 }
+    "coverage": 
+    {
+       "Kentucky": ""
+    }
   },
   {
     "name": "256 ROOFING&EXTERIOR PROD. SERVICES.",
     "country": "USA",
+    "region": 
     "state": "Ohio"
   },
   {
-    "name": "230 HOLLOWAY SALES GROUP LLC (MW)",
-    "country": "USA",
-    "state": "Louisiana"
-  },
-  {
-    "name": "267 WALCO LLC",
-    "country": "USA",
-    "state": "Arkansas"
-  },
-  {
-    "name": "206 DIVERSIFIED RFG SOLUTIONS INC",
-    "country": "USA",
-    "state": "Wisconsin"
-  },
-  {
     "name": "261 ROOFING REPRESENTATIVES",
     "country": "USA",
-    "state": "Iowa"
-  },
-  {
-    "name": "261 ROOFING REPRESENTATIVES",
-    "country": "USA",
-    "state": "Nebraska"
-  },
-  {
-    "name": "143 DIVISION 7 SALES INC",
-    "country": "USA",
-    "state": "Kansas"
-  },
-  {
-    "name": "230 HOLLOWAY SALES GROUP LLC (MW)",
-    "country": "USA",
-    "state": "Mississippi"
+    "region": "Midwestern",
+    "centroid": { "lat": 41.948294, "lng": -96.205045 },
+    "coverage": 
+    {
+      "Iowa": "ALL"
+      "Nebraska": "ALL"
+      "Illinois": "Rock Island"
+    }
   },
   {
     "name": "254 ROOFING&EXTERIOR PROD SERVICES",
@@ -297,9 +278,11 @@
   {
     "name": "248 DIVISION 7 SALES INC.",
     "country": "USA",
-    "state": "Illinois"
-   "counties": [
-        "Rock Island", "La Salle", "Whiteside", "Henry", "Lee", "Bureau", "Jo Daviess", "Carroll", "Mercer", "Putnam",
+    "region": "Midwestern",
+    "centroid": { "lat": 40.382342, "lng": -89.346566 }
+    "coverage":  {
+      "Illinois": [
+        "La Salle", "Whiteside", "Henry", "Lee", "Bureau", "Jo Daviess", "Carroll", "Mercer", "Putnam",
         "Adams", "Knox", "McDonough", "Hancock", "Warren", "Pike", "Schuyler", "Brown", "Henderson",
         "Peoria", "McLean", "Tazewell", "Woodford", "Livingston", "Fulton", "De Witt", "Mason", "Marshall", "Stark",
         "Champaign", "Vermilion", "Iroquois", "Douglas", "Piatt", "Ford",
@@ -308,116 +291,126 @@
         "Coles", "Marion", "Effingham", "Fayette", "Crawford", "Edgar", "Richland", "Clark", "Lawrence", "Moultrie", "Clay", "Cumberland", "Jasper",
         "Williamson", "Jackson", "Franklin", "Jefferson", "Saline", "Perry", "Union", "Wayne", "Massac", "White", "Johnson", "Wabash", "Hamilton", "Edwards", "Pulaski", "Gallatin", "Alexander", "Pope", "Hardin"
     ]
-  },
-  {
-    "name": "230 HOLLOWAY SALES GROUP LLC (MW)",
-    "country": "USA",
-    "state": "Alabama"
+   }
   },
   {
     "name": "247  SHERMACH SALES LLC",
     "country": "USA",
-    "state": "Minnesota"
-  },
-  {
-    "name": "245 A & D PRODUCTS",
-    "country": "USA",
-    "state": "Indiana",
-    "counties": ["Benton, Lake, Newton"]
-  },
-  {
-    "name": "142 W.R. WALSH INC",
-    "country": "USA",
-    "state": "North Carolina"
+    "region": "Northern",
+    "centroid": { "lat": 45.789340, "lng": -96.708867 }
+    "coverage":  
+    { 
+      "Minnesota": "ALL"
+      "North Dakota": "ALL"
+      "South Dakota": "ALL"
+    }
   },
   {
     "name": "142 W.R. WALSH INC",
+    "region": "Southeastern",
     "country": "USA",
-    "state": "South Carolina"
+    "centroid": { "lat": 34.671869, "lng": -79.645512 }
+    "coverage": 
+    { 
+      "North Carolina": "ALL"
+      "South Carlina":  "ALL"
+    }
   },
   {
     "name": "178 LAGOD CONSTRUCTION PRODUCTS",
     "country": "USA",
-    "state": "Tennessee"
-  },
-  {
-    "name": "178 LAGOD CONSTRUCTION PRODUCTS",
-    "country": "USA",
-    "state": "Georgia"
+    "region": "Southeastern",
+    "centroid" { "lat": 34.280766, "lng": -84.462830 }
+    "coverage": 
+    {
+      "Tennessee": "ALL"
+      "Georgia": "ALL"
   },
   {
     "name": "ALI ANGLE",
     "country": "USA",
-    "state": "Arizona"
+    "region": "Southwestern",
+    "centroid": { "lat": 34.731875, "lng": -112.144162 }
+    "coverage": 
+    {
+      "Arizona": "ALL"
+    }
   },
   {
     "name": "269 AT WATERPROOFING SOLUTIONS",
     "country": "USA",
-    "state": "California",
-    "counties": [
-    "Santa Barbara", "Santa Cruz", "Ventura", "Fresno", "Inyo", 
-    "Kern", "Kings", "Tulare", "Riverside", "San Bernardino", 
-    "Los Angeles", "Orange", "Imperial", "San Diego"
-  ]
+    "region": "Western",
+    "centroid": { "lat": 34.442752, "lng": -116.835946 }
+    "coverage": 
+    {
+    "California": ["Santa Barbara", "Santa Cruz", "Ventura", "Fresno", "Inyo", "Kern", "Kings", "Tulare", "Riverside", "San Bernardino", "Los Angeles", "Orange", "Imperial", "San Diego"]
+    }
   },
   {
     "name": "242 MILLER & SONS ROOFING SOLUTIONS",
     "country": "USA",
-    "state": "California",
-  "counties": [
-    "Butte", "Colusa", "El Dorado", "Glenn", "Lassen", "Modoc", "Nevada", "Placer", 
-    "Plumas", "Sacramento", "Shasta", "Sierra", "Siskiyou", "Sutter", "Tehama", 
-    "Yolo", "Yuba", "Del Norte", "Humboldt", "Lake", "Mendocino", "Napa", "Sonoma", 
-    "Trinity", "Alameda", "Contra Costa", "Marin", "San Francisco", "San Mateo", 
-    "Santa Clara", "Solano", "Monterey", "San Benito", "San Luis Obispo", "Alpine", 
-    "Amador", "Calaveras", "Madera", "Mariposa", "Merced", "Mono", "San Joaquin", 
-    "Stanislaus", "Tuolumne"
-  ]
-  },
+    "region": "Western",
+    "centroid": { "lat": 39.989228, "lng": -122.256399 },
+    "coverage": 
+    {
+  "California": ["Butte", "Colusa", "El Dorado", "Glenn", "Lassen", "Modoc", "Nevada", "Placer", "Plumas", "Sacramento", "Shasta", "Sierra", "Siskiyou", "Sutter", "Tehama", "Yolo", "Yuba", "Del Norte", "Humboldt", "Lake", "Mendocino", "Napa", "Sonoma", "Trinity", "Alameda", "Contra Costa", "Marin", "San Francisco", "San Mateo", "Santa Clara", "Solano", "Monterey", "San Benito", "San Luis Obispo", "Alpine", "Amador", "Calaveras", "Madera", "Mariposa", "Merced", "Mono", "San Joaquin", "Stanislaus", "Tuolumne"]
+    }
+    },
   {
     "name": "201 ROOFING SOLUTIONS GROUP (W)",
     "country": "USA",
-    "state": "New Mexico"
+    "region": "Western",
+    "centroid": { "lat": 34.442752, "lng": -106.244733 }
+    "coverage": 
+    {
+      "New Mexico": "ALL"
+    }
   },
   {
     "name": "180 WELLER ASSOCIATES",
     "country": "USA",
-    "state": "Washington"
-  },
-  {
-    "name": "180 WELLER ASSOCIATES",
-    "country": "USA",
-    "state": "Oregon"
+    "region": "Pacific Northwest",
+    "coverage": { "lat": 45.718259, "lng": -120.300458 }
+    "coverage": 
+    {
+      "Washington": "ALL"
+      "Oregon": "ALL"
+      "Alaska": "ALL"
+    }
   },
   {
     "name": "TYSON SMITH",
     "country": "USA",
-    "state": "Hawaii"
+    "region": "West",
+    "centroid": { "lat": 39.058578, "lng": -116.282608 },
+    "coverage": 
+    {
+      "Hawaii": "ALL"
+      "Nevada": "ALL"
+    }
   },
   {
     "name": "259 DJS ENTERPRISES INC.",
     "country": "USA",
-    "state": "Utah"
-  },
-  {
-    "name": "TYSON SMITH",
-    "country": "USA",
-    "state": "Nevada"
-  },
-  {
-    "name": "247  SHERMACH SALES LLC",
-    "country": "USA",
-    "state": "Minnesota"
+    "region": "Mountain West",
+    "centroid": { "lat": 42.169051, "lng": -112.879875 },
+    "coverage": 
+    {
+      "Utah": "ALL"
+      "Idaho": "ALL"
+    }
   },
   {
     "name": "246 DJS ENTERPRISES INC",
     "country": "USA",
-    "state": "Montana"
-  },
-  {
-    "name": "259 DJS ENTERPRISES INC.",
-    "country": "USA",
-    "state": "Colorado"
+    "region": "Mountain West",
+    "centroid": { "lat": 42.966410, "lng": -107.041094 }
+    "coverage": 
+    {
+      "Montana": "ALL"
+      "Wyoming": "ALL"
+      "Colorado": "ALL"
+    }
   },
   {
     "name": "254 ENGINEERED SYSTEMS",
@@ -448,10 +441,5 @@
     "name": "TODD HARRIS",
     "country" "Canada",
     "province": "Nova Scotia"
-  },
-  {
-    "name": "259 DJS ENTERPRISES INC.",
-    "country": "USA",
-    "state": "Wyoming"
   }
 ]
