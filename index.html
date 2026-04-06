@@ -3,38 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KARNAK | Territory Locator Elite</title>
+    <title>KARNAK | Territory Locator</title>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
         :root { --k-red: #ce2029; }
-        html, body { height: 100%; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; }
+        html, body { height: 100%; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #f8f9fa; }
         
         #header {
-            background: white; padding: 10px 20px; display: flex; flex-direction: row;
-            align-items: center; justify-content: space-between; border-bottom: 5px solid var(--k-red);
+            background: white; padding: 12px 25px; display: flex; flex-direction: row;
+            align-items: center; justify-content: space-between; border-bottom: 4px solid var(--k-red);
             box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: relative; z-index: 1001;
         }
         .logo-box { display: flex; flex-direction: column; }
-        .logo-text { font-size: 1.8rem; font-weight: 900; color: var(--k-red); letter-spacing: 3px; text-transform: uppercase; margin: 0; }
-        #status { font-size: 10px; color: #888; font-weight: bold; text-transform: uppercase; }
+        .logo-text { font-size: 1.8rem; font-weight: 900; color: var(--k-red); letter-spacing: 3px; text-transform: uppercase; margin: 0; line-height: 1; }
+        #status { font-size: 10px; color: #999; font-weight: bold; text-transform: uppercase; margin-top: 4px; }
 
-        /* Search Box Styling */
-        #search-container { display: flex; gap: 5px; }
-        #rep-search { padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 200px; }
+        #search-container { position: relative; }
+        #rep-search { 
+            padding: 10px 15px; border: 2px solid #eee; border-radius: 25px; 
+            width: 250px; outline: none; transition: border-color 0.3s;
+        }
+        #rep-search:focus { border-color: var(--k-red); }
 
-        #map { height: calc(100vh - 75px); width: 100%; background: #ddd; }
+        #map { height: calc(100vh - 78px); width: 100%; background: #e9ecef; }
 
+        /* Floating Labels */
         .territory-label {
-            background: white !important; border: 2px solid #333 !important;
-            border-radius: 4px; padding: 2px 6px; font-weight: 800; font-size: 10px;
-            white-space: nowrap; box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            background: white !important; border: 1.5px solid #333 !important;
+            border-radius: 3px; padding: 2px 6px; font-weight: 800; font-size: 10px;
+            white-space: nowrap; box-shadow: 1px 1px 4px rgba(0,0,0,0.15);
             display: flex; align-items: center; justify-content: center;
         }
 
-        .k-popup { min-width: 180px; }
-        .k-popup h3 { margin: 0 0 5px 0; font-size: 14px; border-bottom: 2px solid var(--k-red); padding-bottom: 3px; }
+        .k-popup { min-width: 190px; }
+        .k-popup h3 { margin: 0 0 8px 0; font-size: 14px; border-bottom: 2px solid var(--k-red); padding-bottom: 4px; color: #333; }
+        .k-popup div { font-size: 13px; margin-bottom: 3px; }
     </style>
 </head>
 <body>
@@ -42,10 +47,10 @@
 <div id="header">
     <div class="logo-box">
         <div class="logo-text">KARNAK</div>
-        <div id="status">Syncing Rep Data...</div>
+        <div id="status">Syncing 150 Representatives...</div>
     </div>
     <div id="search-container">
-        <input type="text" id="rep-search" placeholder="Search Rep Name...">
+        <input type="text" id="rep-search" placeholder="Find Representative...">
     </div>
 </div>
 
@@ -56,19 +61,22 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const status = document.getElementById('status');
-        const map = L.map('map').setView([40, -98], 4);
+        const map = L.map('map').setView([39.8, -98.5], 4);
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png').addTo(map);
 
         const repColors = {};
         const territoryLookup = {};
-        const repMarkers = {}; // For search zooming
+        const repMarkers = {}; 
 
+        // Distinctive Color Generation for 150 Reps
         function getRepColor(name) {
             if (!name) return 'transparent';
             if (!repColors[name]) {
-                const hue = Math.floor(Math.random() * 360);
-                repColors[name] = `hsl(${hue}, 75%, 45%)`;
+                const count = Object.keys(repColors).length;
+                // Golden ratio spacing for maximum color difference
+                const hue = (count * 137.5) % 360; 
+                repColors[name] = `hsl(${hue}, 70%, 45%)`;
             }
             return repColors[name];
         }
@@ -88,7 +96,7 @@
                     fetch('states.json')
                 ]);
 
-                if (!repReq.ok || !countyReq.ok || !stateReq.ok) throw new Error("JSON files missing.");
+                if (!repReq.ok || !countyReq.ok || !stateReq.ok) throw new Error("JSON files not found.");
 
                 const reps = await repReq.json();
                 const countyData = await countyReq.json();
@@ -116,17 +124,76 @@
                             icon: L.divIcon({
                                 className: 'territory-label',
                                 html: rep.name,
-                                iconSize: [120, 20]
+                                iconSize: [110, 20]
                             })
                         }).bindPopup(`<b>${rep.name}</b><br>${rep.email}`).addTo(map);
                         
-                        repMarkers[rep.name.toLowerCase()] = marker;
+                        repMarkers[rep.name.toLowerCase()] = { marker, latlng: [rep.centroid.lat, rep.centroid.lng] };
                     }
                 });
 
-                // Render Territories with Rep-Specific Outlines
                 L.geoJson(countyData, {
                     style: (f) => {
                         const s = getProp(f.properties, ['STATE_NAME', 'state', 'State', 'name']);
                         const c = getProp(f.properties, ['NAME', 'name', 'county', 'County']);
-                        const owner =
+                        const owner = territoryLookup[`state-wide-${s}`] || territoryLookup[`${s}-${c}`];
+                        
+                        if (owner) {
+                            const color = getRepColor(owner.name);
+                            return {
+                                fillColor: color,
+                                fillOpacity: 0.35,
+                                color: color,   // REP-SPECIFIC OUTLINE
+                                weight: 2.2,    
+                                opacity: 1
+                            };
+                        }
+                        return { fillColor: '#ddd', fillOpacity: 0.05, color: '#bbb', weight: 0.4 };
+                    },
+                    onEachFeature: (f, l) => {
+                        const s = getProp(f.properties, ['STATE_NAME', 'state', 'State', 'name']);
+                        const c = getProp(f.properties, ['NAME', 'name', 'county', 'County']);
+                        const owner = territoryLookup[`state-wide-${s}`] || territoryLookup[`${s}-${c}`];
+                        
+                        if (owner) {
+                            l.bindPopup(`
+                                <div class="k-popup">
+                                    <h3>${c.toUpperCase()}, ${s.toUpperCase()}</h3>
+                                    <div><b>Rep:</b> ${owner.name}</div>
+                                    <div><b>Email:</b> ${owner.email}</div>
+                                    <div><b>Phone:</b> ${owner.phone || 'N/A'}</div>
+                                </div>
+                            `);
+                            l.on('mouseover', () => l.setStyle({ fillOpacity: 0.65, weight: 3.5 }));
+                            l.on('mouseout', () => l.setStyle({ fillOpacity: 0.35, weight: 2.2 }));
+                        }
+                    }
+                }).addTo(map);
+
+                L.geoJson(stateData, {
+                    style: { color: '#222', weight: 2.5, fillOpacity: 0, opacity: 1, interactive: false }
+                }).addTo(map);
+
+                status.innerText = reps.length + " Territories Synchronized";
+
+                // Search Logic
+                document.getElementById('rep-search').addEventListener('input', (e) => {
+                    const val = e.target.value.toLowerCase();
+                    const foundName = Object.keys(repMarkers).find(name => name.includes(val));
+                    if (foundName && val.length > 2) {
+                        const target = repMarkers[foundName];
+                        map.flyTo(target.latlng, 7, { duration: 1.5 });
+                        target.marker.openPopup();
+                    }
+                });
+
+            } catch (err) {
+                status.innerText = "Error: " + err.message;
+                console.error(err);
+            }
+        }
+        initMap();
+    });
+</script>
+</body>
+</html>
