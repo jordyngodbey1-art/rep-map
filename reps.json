@@ -334,7 +334,7 @@
     "name": "178 LAGOD CONSTRUCTION PRODUCTS",
     "country": "USA",
     "region": "Southeastern",
-    "centroid" { "lat": 34.280766, "lng": -84.462830 },
+    "centroid": { "lat": 34.280766, "lng": -84.462830 },
     "coverage": 
     {
       "Tennessee": "ALL",
