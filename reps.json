@@ -74,7 +74,7 @@
     "region": "Mid-Atlantic",
     "centroid": { "lat": 40.869911, "lng": -75.959473 },
     "coverage": {
-    "Pennsylvania": ["Adams", "Lancaster", "Lebanon", "Lycoming", "Mifflin", "Montour", "Centre", "Northumberland", "Perry", "Clinton", "Columbia", "Cumberland", "Snyder", "Dauphin", "Somerset", "Union", "Franklin", "Fulton", "Huntingdon", "York", "Juniata", "Lackawanna", "Lehigh", "Berks", "Luzerne", "Bradford", "Monroe", "Carbon", "Northampton", "Pike", "Schuylkill", "Sullivan", "Susquehanna", "Tioga", "Wayne", "Wyoming", "Bucks", "Montgomery", "Chester", "Philadelphia", "Delaware"]
+    "Pennsylvania": ["Adams", "Lancaster", "Lebanon", "Lycoming", "Mifflin", "Montour", "Centre", "Northumberland", "Perry", "Clinton", "Columbia", "Cumberland", "Snyder", "Dauphin", "Somerset", "Union", "Franklin", "Fulton", "Huntingdon", "York", "Juniata", "Lackawanna", "Lehigh", "Berks", "Luzerne", "Bradford", "Monroe", "Carbon", "Northampton", "Pike", "Schuylkill", "Sullivan", "Susquehanna", "Tioga", "Wayne", "Wyoming", "Bucks", "Montgomery", "Chester", "Philadelphia", "Delaware"],
     "Delaware": "ALL"
     }
     },
