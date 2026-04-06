@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KARNAK | Territory Locator Elite</title>
+    <title>KARNAK | Territory Locator</title>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
@@ -32,20 +32,14 @@
         .territory-label {
             background: rgba(255, 255, 255, 0.9) !important; 
             border: 1px solid #444 !important;
-            border-radius: 2px; 
-            padding: 1px 4px; 
-            font-weight: 700; 
-            font-size: 9px; 
-            color: #222;
-            white-space: nowrap; 
-            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
+            border-radius: 2px; padding: 1px 4px; 
+            font-weight: 700; font-size: 9px; color: #222;
+            white-space: nowrap; box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+            display: flex; align-items: center; justify-content: center;
             pointer-events: none;
         }
 
-        .k-popup { min-width: 180px; font-size: 13px; }
+        .k-popup { min-width: 160px; font-size: 13px; }
         .k-popup h3 { margin: 0 0 5px 0; font-size: 13px; border-bottom: 2px solid var(--k-red); padding-bottom: 3px; color: #333; }
     </style>
 </head>
@@ -76,12 +70,11 @@
         const territoryLookup = {};
         const repMarkers = {}; 
 
-        // Distinctive Color Generation
         function getRepColor(name) {
             if (!name) return 'transparent';
             if (!repColors[name]) {
                 const count = Object.keys(repColors).length;
-                const hue = (count * 137.5) % 360; // Golden ratio spacing
+                const hue = (count * 137.5) % 360; 
                 repColors[name] = `hsl(${hue}, 70%, 45%)`;
             }
             return repColors[name];
@@ -102,109 +95,8 @@
                     fetch('states.json')
                 ]);
 
-                if (!repReq.ok || !countyReq.ok || !stateReq.ok) throw new Error("JSON files not found in repo.");
+                if (!repReq.ok || !countyReq.ok || !stateReq.ok) throw new Error("JSON files missing.");
 
                 const reps = await repReq.json();
                 const countyData = await countyReq.json();
                 const stateData = await stateReq.json();
-
-                // 1. PROCESS REPS (BULLETPROOF LOOP)
-                reps.forEach(rep => {
-                    if (rep.coverage) {
-                        Object.keys(rep.coverage).forEach(st => {
-                            const sKey = st.toLowerCase().trim();
-                            let val = rep.coverage[st];
-                            
-                            if (val === "ALL" || val === "all") {
-                                territoryLookup[`state-wide-${sKey}`] = rep;
-                            } else {
-                                // Force into array to prevent forEach error
-                                let countyList = Array.isArray(val) ? val : [val];
-                                countyList.forEach(c => {
-                                    if (c) territoryLookup[`${sKey}-${c.toString().toLowerCase().trim()}`] = rep;
-                                });
-                            }
-                        });
-                    }
-
-                    // Place Centroid Labels
-                    if (rep.centroid && rep.centroid.lat) {
-                        const marker = L.marker([rep.centroid.lat, rep.centroid.lng], {
-                            icon: L.divIcon({
-                                className: 'territory-label',
-                                html: rep.name,
-                                iconSize: [90, 18]
-                            })
-                        }).bindPopup(`<b>${rep.name}</b><br>${owner.email || ''}`).addTo(map);
-                        
-                        repMarkers[rep.name.toLowerCase()] = { marker, latlng: [rep.centroid.lat, rep.centroid.lng] };
-                    }
-                });
-
-                // 2. DRAW TERRITORIES (COLORED OUTLINES)
-                L.geoJson(countyData, {
-                    style: (f) => {
-                        const s = getProp(f.properties, ['STATE_NAME', 'state', 'State', 'name']);
-                        const c = getProp(f.properties, ['NAME', 'name', 'county', 'County']);
-                        const owner = territoryLookup[`state-wide-${s}`] || territoryLookup[`${s}-${c}`];
-                        
-                        if (owner) {
-                            const repColor = getRepColor(owner.name);
-                            return {
-                                fillColor: repColor,
-                                fillOpacity: 0.4,
-                                color: repColor,   // MATCHING OUTLINE COLOR
-                                weight: 2.2,       // THICK BORDER
-                                opacity: 1,
-                                lineJoin: 'round'
-                            };
-                        }
-                        return { fillColor: '#fff', fillOpacity: 0, color: '#ccc', weight: 0.5, opacity: 0.2 };
-                    },
-                    onEachFeature: (f, l) => {
-                        const s = getProp(f.properties, ['STATE_NAME', 'state', 'State', 'name']);
-                        const c = getProp(f.properties, ['NAME', 'name', 'county', 'County']);
-                        const owner = territoryLookup[`state-wide-${s}`] || territoryLookup[`${s}-${c}`];
-                        
-                        if (owner) {
-                            l.bindPopup(`
-                                <div class="k-popup">
-                                    <h3>${c.toUpperCase()}, ${s.toUpperCase()}</h3>
-                                    <b>Rep:</b> ${owner.name}<br>
-                                    <b>Email:</b> ${owner.email}
-                                </div>
-                            `);
-                            l.on('mouseover', () => l.setStyle({ fillOpacity: 0.7, weight: 4 }));
-                            l.on('mouseout', () => l.setStyle({ fillOpacity: 0.4, weight: 2.2 }));
-                        }
-                    }
-                }).addTo(map);
-
-                // 3. DRAW STATE BORDERS (BLACK)
-                L.geoJson(stateData, {
-                    style: { color: '#000', weight: 2.5, fillOpacity: 0, opacity: 1, interactive: false }
-                }).addTo(map);
-
-                status.innerText = reps.length + " Reps Synchronized";
-
-                // Search Logic
-                document.getElementById('rep-search').addEventListener('input', (e) => {
-                    const val = e.target.value.toLowerCase();
-                    const foundName = Object.keys(repMarkers).find(name => name.includes(val));
-                    if (foundName && val.length > 2) {
-                        const target = repMarkers[foundName];
-                        map.flyTo(target.latlng, 7, { duration: 1.5 });
-                        target.marker.openPopup();
-                    }
-                });
-
-            } catch (err) {
-                status.innerText = "Error: " + err.message;
-                console.error(err);
-            }
-        }
-        initMap();
-    });
-</script>
-</body>
-</html>
