@@ -13,7 +13,7 @@
         #status { font-size: 10px; color: #999; font-weight: bold; text-transform: uppercase; margin-top: 4px; }
         #rep-search { padding: 8px 15px; border: 1px solid #ddd; border-radius: 20px; width: 220px; }
         #map { height: calc(100vh - 75px); width: 100%; background: #fdfdfd; }
-        .territory-label { background: rgba(255, 255, 255, 0.9) !important; border: 1px solid #444 !important; border-radius: 2px; padding: 1px 4px; font-weight: 700; font-size: 9px; white-space: nowrap; pointer-events: none; }
+        .territory-label { background: rgba(255, 255, 255, 0.9) !important; border: 1px solid #444 !important; border-radius: 2px; padding: 1px 4px; font-weight: 700; font-size: 9px; white-space: nowrap; pointer-events: none; text-align: center; }
     </style>
 </head>
 <body>
@@ -49,54 +49,60 @@
             return repColors[name];
         }
 
+        // Clean name function (Removes "County", "Parish", and extra spaces)
+        function clean(str) {
+            if (!str) return "";
+            return str.toString().toLowerCase()
+                      .replace(/\bcounty\b/g, "")
+                      .replace(/\bparish\b/g, "")
+                      .trim();
+        }
+
         async function initMap() {
             try {
-                // Check Reps
-                status.innerText = "Checking reps.json...";
-                const repReq = await fetch('reps.json');
-                if (!repReq.ok) throw new Error("reps.json not found (Check capitalization)");
+                const [repReq, countyReq, stateReq] = await Promise.all([
+                    fetch('reps.json'),
+                    fetch('counties.json'),
+                    fetch('states.json')
+                ]);
+
+                if (!repReq.ok || !countyReq.ok || !stateReq.ok) throw new Error("Check file names/paths");
+
                 const reps = await repReq.json();
-
-                // Check Counties
-                status.innerText = "Checking counties.json...";
-                const countyReq = await fetch('counties.json');
-                if (!countyReq.ok) throw new Error("counties.json not found");
                 const countyData = await countyReq.json();
-
-                // Check States
-                status.innerText = "Checking states.json...";
-                const stateReq = await fetch('states.json');
-                if (!stateReq.ok) throw new Error("states.json not found");
                 const stateData = await stateReq.json();
-
-                status.innerText = "Processing Data...";
 
                 reps.forEach(rep => {
                     if (rep.coverage) {
                         Object.keys(rep.coverage).forEach(st => {
-                            const sKey = st.toLowerCase().trim();
+                            const sKey = clean(st);
                             let val = rep.coverage[st];
                             if (val === "ALL" || val === "all") {
                                 territoryLookup[`state-wide-${sKey}`] = rep;
                             } else {
                                 let list = Array.isArray(val) ? val : [val];
-                                list.forEach(c => { if (c) territoryLookup[`${sKey}-${c.toString().toLowerCase().trim()}`] = rep; });
+                                list.forEach(c => { 
+                                    if (c) territoryLookup[`${sKey}-${clean(c)}`] = rep; 
+                                });
                             }
                         });
                     }
                     if (rep.centroid && rep.centroid.lat) {
                         const marker = L.marker([rep.centroid.lat, rep.centroid.lng], {
                             icon: L.divIcon({ className: 'territory-label', html: rep.name, iconSize: [90, 18] })
-                        }).bindPopup(`<b>Representative:</b><br>${rep.name}`).addTo(map);
+                        }).bindPopup(`<b>Rep: ${rep.name}</b>`).addTo(map);
                         repMarkers[rep.name.toLowerCase()] = { marker, latlng: [rep.centroid.lat, rep.centroid.lng] };
                     }
                 });
 
                 L.geoJson(countyData, {
                     style: (f) => {
-                        const s = (f.properties.STATE_NAME || f.properties.state || f.properties.State || f.properties.name || "").toString().toLowerCase().trim();
-                        const c = (f.properties.NAME || f.properties.name || f.properties.county || "").toString().toLowerCase().trim();
+                        const sProps = f.properties;
+                        const s = clean(sProps.STATE_NAME || sProps.state || sProps.State || sProps.name || "");
+                        const c = clean(sProps.NAME || sProps.name || sProps.county || "");
+                        
                         const owner = territoryLookup[`state-wide-${s}`] || territoryLookup[`${s}-${c}`];
+                        
                         if (owner) {
                             const col = getRepColor(owner.name);
                             return { fillColor: col, fillOpacity: 0.4, color: col, weight: 2.2, opacity: 1 };
@@ -104,24 +110,25 @@
                         return { fillColor: '#fff', fillOpacity: 0, color: '#ccc', weight: 0.5, opacity: 0.2 };
                     },
                     onEachFeature: (f, l) => {
-                        const s = (f.properties.STATE_NAME || f.properties.state || "").toString().toUpperCase();
-                        const c = (f.properties.NAME || f.properties.name || "").toString().toUpperCase();
-                        const owner = territoryLookup[`state-wide-${s.toLowerCase()}`] || territoryLookup[`${s.toLowerCase()}-${c.toLowerCase()}`];
+                        const s = (f.properties.STATE_NAME || f.properties.state || "").toString();
+                        const c = (f.properties.NAME || f.properties.name || "").toString();
+                        const owner = territoryLookup[`state-wide-${clean(s)}`] || territoryLookup[`${clean(s)}-${clean(c)}`];
                         if (owner) {
                             l.bindPopup(`<b>${c}, ${s}</b><br>Rep: ${owner.name}`);
                             l.on('mouseover', () => l.setStyle({ fillOpacity: 0.7, weight: 4 }));
-                            l.on('mouseout', () => l.setStyle({ fillOpacity: 0.4, weight: 2.2 }));
+                            l.on('mouseout', () => {
+                                const col = getRepColor(owner.name);
+                                l.setStyle({ fillOpacity: 0.4, weight: 2.2 });
+                            });
                         }
                     }
                 }).addTo(map);
 
                 L.geoJson(stateData, { style: { color: '#000', weight: 2.5, fillOpacity: 0, interactive: false } }).addTo(map);
-
                 status.innerText = reps.length + " Reps Loaded";
 
             } catch (err) {
-                status.innerText = "CRITICAL ERROR: " + err.message;
-                status.style.color = "red";
+                status.innerText = "Error: " + err.message;
                 console.error(err);
             }
         }
