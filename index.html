@@ -3,43 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KARNAK | Territory Locator</title>
+    <title>KARNAK | Territory Locator Elite</title>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
         :root { --k-red: #ce2029; }
-        /* Force the body and html to be full height */
-        html, body { height: 100%; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        html, body { height: 100%; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; }
         
         #header {
-            background: white; padding: 15px; display: flex; flex-direction: column;
-            align-items: center; border-bottom: 5px solid var(--k-red);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: white; padding: 10px 20px; display: flex; flex-direction: row;
+            align-items: center; justify-content: space-between; border-bottom: 5px solid var(--k-red);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: relative; z-index: 1001;
         }
-        .logo-text { font-size: 2.2rem; font-weight: 900; color: var(--k-red); letter-spacing: 4px; text-transform: uppercase; margin: 0; }
-        #status { font-size: 12px; color: #888; margin-top: 5px; font-weight: bold; }
+        .logo-box { display: flex; flex-direction: column; }
+        .logo-text { font-size: 1.8rem; font-weight: 900; color: var(--k-red); letter-spacing: 3px; text-transform: uppercase; margin: 0; }
+        #status { font-size: 10px; color: #888; font-weight: bold; text-transform: uppercase; }
 
-        /* The Map MUST have a specific height in pixels or vh */
-        #map { 
-            height: 80vh; 
-            width: 100%; 
-            background: #eee; 
-            border: 1px solid #ccc;
-        }
+        /* Search Box Styling */
+        #search-container { display: flex; gap: 5px; }
+        #rep-search { padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 200px; }
+
+        #map { height: calc(100vh - 75px); width: 100%; background: #ddd; }
 
         .territory-label {
-            background: white !important; border: 2px solid var(--k-red) !important;
-            padding: 2px 8px; font-weight: bold; font-size: 11px; border-radius: 4px;
-            white-space: nowrap; display: flex; align-items: center; justify-content: center;
+            background: white !important; border: 2px solid #333 !important;
+            border-radius: 4px; padding: 2px 6px; font-weight: 800; font-size: 10px;
+            white-space: nowrap; box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            display: flex; align-items: center; justify-content: center;
         }
+
+        .k-popup { min-width: 180px; }
+        .k-popup h3 { margin: 0 0 5px 0; font-size: 14px; border-bottom: 2px solid var(--k-red); padding-bottom: 3px; }
     </style>
 </head>
 <body>
 
 <div id="header">
-    <div class="logo-text">KARNAK</div>
-    <div id="status">Waiting for page to load...</div>
+    <div class="logo-box">
+        <div class="logo-text">KARNAK</div>
+        <div id="status">Syncing Rep Data...</div>
+    </div>
+    <div id="search-container">
+        <input type="text" id="rep-search" placeholder="Search Rep Name...">
+    </div>
 </div>
 
 <div id="map"></div>
@@ -47,100 +54,79 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-    // This makes sure the script only runs AFTER the HTML is 100% ready
     document.addEventListener('DOMContentLoaded', function() {
         const status = document.getElementById('status');
-        status.innerText = "Script initialized...";
+        const map = L.map('map').setView([40, -98], 4);
 
-        // Initialize Map
-        const map = L.map('map').setView([37.8, -96], 4);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png').addTo(map);
 
         const repColors = {};
         const territoryLookup = {};
+        const repMarkers = {}; // For search zooming
 
         function getRepColor(name) {
-            if (!name) return '#e0e0e0';
+            if (!name) return 'transparent';
             if (!repColors[name]) {
                 const hue = Math.floor(Math.random() * 360);
-                repColors[name] = `hsl(${hue}, 70%, 50%)`;
+                repColors[name] = `hsl(${hue}, 75%, 45%)`;
             }
             return repColors[name];
         }
 
-        async function startMapping() {
+        function getProp(props, keys) {
+            for (let k of keys) {
+                if (props[k]) return props[k].toString().toLowerCase().trim();
+            }
+            return "";
+        }
+
+        async function initMap() {
             try {
-                status.innerText = "Fetching JSON files...";
-                
-                // Use relative paths for GitHub
                 const [repReq, countyReq, stateReq] = await Promise.all([
                     fetch('reps.json'),
                     fetch('counties.json'),
                     fetch('states.json')
                 ]);
 
-                if (!repReq.ok) throw new Error("reps.json not found");
-                if (!countyReq.ok) throw new Error("counties.json not found");
-                if (!stateReq.ok) throw new Error("states.json not found");
+                if (!repReq.ok || !countyReq.ok || !stateReq.ok) throw new Error("JSON files missing.");
 
                 const reps = await repReq.json();
                 const countyData = await countyReq.json();
                 const stateData = await stateReq.json();
 
-                status.innerText = "Processing " + reps.length + " reps...";
-
-                // Build lookup
                 reps.forEach(rep => {
                     if (rep.coverage) {
                         Object.keys(rep.coverage).forEach(st => {
                             const sKey = st.toLowerCase().trim();
-                            const val = rep.coverage[st];
+                            let val = rep.coverage[st];
+                            
                             if (val === "ALL") {
                                 territoryLookup[`state-wide-${sKey}`] = rep;
                             } else {
-                                val.forEach(c => {
-                                    territoryLookup[`${sKey}-${c.toLowerCase().trim()}`] = rep;
+                                const list = Array.isArray(val) ? val : [val];
+                                list.forEach(c => {
+                                    if (c) territoryLookup[`${sKey}-${c.toLowerCase().trim()}`] = rep;
                                 });
                             }
                         });
                     }
-                    if (rep.centroid) {
-                        L.marker([rep.centroid.lat, rep.centroid.lng], {
-                            icon: L.divIcon({ className: 'territory-label', html: rep.name, iconSize: [120, 25] })
-                        }).addTo(map);
+
+                    if (rep.centroid && rep.centroid.lat) {
+                        const marker = L.marker([rep.centroid.lat, rep.centroid.lng], {
+                            icon: L.divIcon({
+                                className: 'territory-label',
+                                html: rep.name,
+                                iconSize: [120, 20]
+                            })
+                        }).bindPopup(`<b>${rep.name}</b><br>${rep.email}`).addTo(map);
+                        
+                        repMarkers[rep.name.toLowerCase()] = marker;
                     }
                 });
 
-                // Add County Layer
+                // Render Territories with Rep-Specific Outlines
                 L.geoJson(countyData, {
                     style: (f) => {
-                        const s = (f.properties.STATE_NAME || f.properties.state || "").toLowerCase().trim();
-                        const c = (f.properties.NAME || f.properties.name || "").toLowerCase().trim();
-                        const owner = territoryLookup[`state-wide-${s}`] || territoryLookup[`${s}-${c}`];
-                        return {
-                            fillColor: getRepColor(owner ? owner.name : null),
-                            fillOpacity: owner ? 0.7 : 0.1,
-                            color: '#000', weight: 0.3, opacity: 0.3
-                        };
-                    }
-                }).addTo(map);
-
-                // Add State Layer
-                L.geoJson(stateData, {
-                    style: { color: '#000', weight: 2, fillOpacity: 0 }
-                }).addTo(map);
-
-                status.innerText = "Karnak Map Loaded Successfully";
-
-            } catch (err) {
-                status.innerText = "ERROR: " + err.message;
-                status.style.color = "red";
-                console.error(err);
-            }
-        }
-
-        startMapping();
-    });
-</script>
-</body>
-</html>
+                        const s = getProp(f.properties, ['STATE_NAME', 'state', 'State', 'name']);
+                        const c = getProp(f.properties, ['NAME', 'name', 'county', 'County']);
+                        const owner =
