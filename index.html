@@ -3,52 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KARNAK | Multi-National Territory Locator</title>
+    <title>KARNAK | Territory Locator</title>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
-        :root { --k-red: #ce2029; --k-bg: #fff1f1; }
+        :root { --k-red: #ce2029; }
         body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #ffffff; overflow: hidden; }
         
-        /* Centered Header */
         #header {
-            background: white; padding: 15px 20px; display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            border-bottom: 5px solid var(--k-red); box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000;
+            background: white; padding: 15px; display: flex; flex-direction: column;
+            align-items: center; border-bottom: 5px solid var(--k-red);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000;
         }
         .logo-text { font-size: 2.2rem; font-weight: 900; color: var(--k-red); letter-spacing: 4px; text-transform: uppercase; margin: 0; }
-        .sub-text { font-size: 0.7rem; color: #888; letter-spacing: 2px; text-transform: uppercase; margin-top: -5px; }
+        #status { font-size: 0.7rem; color: #888; margin-top: 5px; text-transform: uppercase; }
 
-        #map { height: calc(100vh - 85px); width: 100%; background: #fdfdfd; }
+        #map { height: calc(100vh - 95px); width: 100%; background: #fdfdfd; }
 
-        /* Manual Centroid Label Styling */
+        /* Floating Rep Labels */
         .territory-label {
             background: rgba(255, 255, 255, 0.95) !important;
             border: 2px solid var(--k-red) !important;
-            border-radius: 4px;
-            padding: 4px 10px;
-            text-align: center;
-            font-weight: 800;
-            font-size: 11px;
-            color: #222;
-            white-space: nowrap;
-            box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+            border-radius: 4px; padding: 4px 10px;
+            text-align: center; font-weight: 800; font-size: 11px; color: #222;
+            white-space: nowrap; box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* Professional Popups */
-        .k-popup { min-width: 220px; max-height: 250px; overflow-y: auto; }
-        .k-popup h3 { color: var(--k-red); border-bottom: 2px solid var(--k-red); margin: 0 0 10px 0; font-size: 1.1rem; }
-        .rep-info { margin-top: 10px; font-size: 13px; color: #333; line-height: 1.4; }
-        .rep-info b { color: #000; font-size: 14px; }
+        .k-popup { min-width: 200px; }
+        .k-popup h3 { color: var(--k-red); border-bottom: 2px solid var(--k-red); margin: 0 0 8px 0; }
     </style>
 </head>
 <body>
 
 <div id="header">
     <div class="logo-text">KARNAK</div>
-    <div class="sub-text">Authorized Representative Map</div>
+    <div id="status">Initializing Map Data...</div>
 </div>
 
 <div id="map"></div>
@@ -56,120 +47,126 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-    const map = L.map('map', { zoomSnap: 0.5 }).setView([45, -96], 4);
+    const map = L.map('map').setView([37.8, -96], 4);
+    const status = document.getElementById('status');
 
-    // Clean Base Map (No labels)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png').addTo(map);
+    // Clean background layer
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; CARTO'
+    }).addTo(map);
 
-    // Color Generator (Stays consistent for the same Rep Name)
     const repColors = {};
+    const territoryLookup = {};
+
     function getRepColor(name) {
         if (!name) return '#e0e0e0';
         if (!repColors[name]) {
-            const colors = ['#ce2029', '#d35400', '#2c3e50', '#27ae60', '#8e44ad', '#2980b9', '#f39c12', '#16a085'];
-            // Assign from preset list or generate random if list is exhausted
-            repColors[name] = colors[Object.keys(repColors).length % colors.length] || 
-                             '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+            // Generate distinct colors
+            const hue = Math.floor(Math.random() * 360);
+            repColors[name] = `hsl(${hue}, 70%, 45%)`;
         }
         return repColors[name];
     }
 
-    const territoryLookup = {}; // Key: "state-county" -> Value: Rep Object
-
-    async function loadKarnakElite() {
+    async function loadKarnakGitHub() {
         try {
-            const [repReq, usReq, caReq] = await Promise.all([
+            // 1. Fetch Local JSON files from your Repo
+            status.innerText = "Loading Territory Files...";
+            const [repReq, countyReq, stateReq] = await Promise.all([
                 fetch('./reps.json'),
-                fetch('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json'),
-                fetch('https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/canada.geojson')
+                fetch('./counties.json'),
+                fetch('./states.json')
             ]);
 
-            const reps = await repReq.json();
-            const usData = await usReq.json();
-            const caData = await caReq.json();
+            if (!repReq.ok || !countyReq.ok || !stateReq.ok) {
+                throw new Error("One or more JSON files could not be found in the repository.");
+            }
 
-            // 1. PROCESS MULTI-STATE & WILDCARD JSON
+            const reps = await repReq.json();
+            const countyData = await countyReq.json();
+            const stateData = await stateReq.json();
+
+            status.innerText = `Processing ${reps.length} Representatives...`;
+
+            // 2. Build the Lookup Table
             reps.forEach(rep => {
                 if (rep.coverage) {
                     Object.keys(rep.coverage).forEach(stateName => {
-                        const stateKey = stateName.toLowerCase().trim();
+                        const sKey = stateName.toLowerCase().trim();
                         const val = rep.coverage[stateName];
 
                         if (val === "ALL") {
-                            territoryLookup[`state-wide-${stateKey}`] = rep;
+                            territoryLookup[`state-wide-${sKey}`] = rep;
                         } else if (Array.isArray(val)) {
-                            val.forEach(countyName => {
-                                const key = `${stateKey}-${countyName.toLowerCase().trim()}`;
-                                territoryLookup[key] = rep;
+                            val.forEach(c => {
+                                territoryLookup[`${sKey}-${c.toLowerCase().trim()}`] = rep;
                             });
                         }
                     });
                 }
 
-                // 2. DROP MANUAL CENTROID LABEL
+                // 3. Add Centroid Markers
                 if (rep.centroid && rep.centroid.lat && rep.centroid.lng) {
                     L.marker([rep.centroid.lat, rep.centroid.lng], {
                         icon: L.divIcon({
                             className: 'territory-label',
                             html: `<span>${rep.name}</span>`,
-                            iconSize: [140, 30]
+                            iconSize: [130, 30]
                         })
                     }).addTo(map);
                 }
             });
 
-            // 3. STYLING & INTERACTION LOGIC
-            function applyStyle(f) {
-                // Handle different property names for US vs Canada
-                const state = (f.properties.STATE_NAME || f.properties.name || "").toLowerCase().trim();
-                const unit = (f.properties.NAME || f.properties.name || "").toLowerCase().trim();
-                
-                const owner = territoryLookup[`state-wide-${state}`] || territoryLookup[`${state}-${unit}`];
-                
-                return {
-                    fillColor: getRepColor(owner ? owner.name : null),
-                    fillOpacity: owner ? 0.75 : 0.1,
-                    color: '#000',
-                    weight: 0.4,
-                    opacity: 0.3
-                };
-            }
+            // 4. Render County Layer (Rep Territories)
+            L.geoJson(countyData, {
+                style: (f) => {
+                    // Normalize properties (matches 'STATE_NAME', 'state', 'name', etc)
+                    const s = (f.properties.STATE_NAME || f.properties.state || f.properties.name || "").toLowerCase().trim();
+                    const c = (f.properties.NAME || f.properties.name || f.properties.county || "").toLowerCase().trim();
+                    
+                    const owner = territoryLookup[`state-wide-${s}`] || territoryLookup[`${s}-${c}`];
+                    
+                    return {
+                        fillColor: getRepColor(owner ? owner.name : null),
+                        fillOpacity: owner ? 0.75 : 0.1,
+                        color: '#000',
+                        weight: 0.3,
+                        opacity: 0.2
+                    };
+                },
+                onEachFeature: (f, l) => {
+                    const s = (f.properties.STATE_NAME || f.properties.state || f.properties.name || "").trim();
+                    const c = (f.properties.NAME || f.properties.name || f.properties.county || "").trim();
+                    const owner = territoryLookup[`state-wide-${s.toLowerCase()}`] || territoryLookup[`${s.toLowerCase()}-${c.toLowerCase()}`];
 
-            function onEach(f, l) {
-                const state = (f.properties.STATE_NAME || f.properties.name || "").trim();
-                const unit = (f.properties.NAME || f.properties.name || "").trim();
-                const owner = territoryLookup[`state-wide-${state.toLowerCase()}`] || territoryLookup[`${state.toLowerCase()}-${unit.toLowerCase()}`];
-
-                if (owner) {
-                    l.bindPopup(`
-                        <div class="k-popup">
-                            <h3>${unit}, ${state}</h3>
-                            <div class="rep-info">
+                    if (owner) {
+                        l.bindPopup(`
+                            <div class="k-popup">
+                                <h3>${c}, ${s}</h3>
                                 <b>${owner.name}</b><br>
-                                <i>${owner.region || 'Territory Manager'}</i><br><br>
-                                Email: ${owner.email}<br>
-                                ${owner.phone ? 'Phone: ' + owner.phone : ''}
+                                ${owner.email}<br>
+                                ${owner.phone || ''}
                             </div>
-                        </div>
-                    `);
+                        `);
+                    }
                 }
-                
-                l.on({
-                    mouseover: (e) => e.target.setStyle({ fillOpacity: 0.9, weight: 1 }),
-                    mouseout: (e) => e.target.setStyle({ fillOpacity: 0.75, weight: 0.4 })
-                });
-            }
+            }).addTo(map);
 
-            // 4. ADD DATA LAYERS
-            L.geoJson(usData, { style: applyStyle, onEachFeature: onEach }).addTo(map);
-            L.geoJson(caData, { style: applyStyle, onEachFeature: onEach }).addTo(map);
+            // 5. Render State Borders (Thick Overlay)
+            L.geoJson(stateData, {
+                style: { color: '#000', weight: 2.5, fillOpacity: 0, opacity: 1 }
+            }).addTo(map);
+
+            status.innerText = "Karnak Map Live";
 
         } catch (e) {
-            console.error("Karnak Map Error:", e);
+            console.error(e);
+            status.innerText = "Error: " + e.message;
+            status.style.color = "red";
         }
     }
 
-    loadKarnakElite();
+    loadKarnakGitHub();
 </script>
 </body>
 </html>
