@@ -115,7 +115,7 @@
     "centroid": { "lat": 38.749799 , "lng": -78.044076 },
     "coverage": 
     { 
-      "Virginia": [ "Alexandria", "Arlington", "Clarke", "Fairfax", "Frederick", "Prince William" ]
+      "Virginia": [ "Alexandria", "Arlington", "Clarke", "Fairfax", "Frederick", "Prince William" ],
       "Maryland": "ALL"
     }
   },
@@ -126,11 +126,11 @@
     "centroid": { "lat": 43.866218, "lng": },
     "coverage": 
     {
-      "Connecticut": "ALL"
-      "Vermont": "ALL"
-      "Maine": "ALL"
-      "New Hampshire": "ALL"
-      "Massachusetts": "ALL"
+      "Connecticut": "ALL",
+      "Vermont": "ALL",
+      "Maine": "ALL",
+      "New Hampshire": "ALL",
+      "Massachusetts": "ALL",
       "Rhode Island": "ALL"
     }
   },
@@ -169,7 +169,7 @@
     "centroid": { "lat": 44.684277, "lng": -89.889725 },
     "coverage": 
     {
-    "Wisconsin": "ALL"
+    "Wisconsin": "ALL",
     "Kansas": "ALL"
     }
   },
@@ -185,7 +185,7 @@
     "centroid": { "lat": 41.672912, "lng": -87.780438 },
     "coverage": 
     {
-    "Illinois": ["Winnebago", "Boone", "Ogle", "Stephenson", "Cook", "DuPage", "Lake", "Will", "Kane", "McHenry", "Kendall", "Kankakee", "DeKalb", "Grundy"]
+    "Illinois": ["Winnebago", "Boone", "Ogle", "Stephenson", "Cook", "DuPage", "Lake", "Will", "Kane", "McHenry", "Kendall", "Kankakee", "DeKalb", "Grundy"],
     "Indiana": ["Benton, Lake, Newton"]
     }
   },
@@ -196,7 +196,7 @@
     "centroid": { "lat": 35.137879, "lng": -94.635822 },
     "coverage": 
     {
-      "Oklahoma": "ALL"
+      "Oklahoma": "ALL",
       "Arkansas": "ALL"
     }
   },
@@ -232,8 +232,8 @@
     "centroid": { "lat": 38.411500, "lng": -94.658877 },
     "coverage": 
     {
-      "Missouri": "ALL"
-      "Oklahoma": "ALL"
+      "Missouri": "ALL",
+      "Oklahoma": "ALL",
       "Kentucky": ["McCraken", "Ballard", "Carlisle", "Hickman", "Fulton", "Graves"]
     }
   },
@@ -244,13 +244,33 @@
     "centroid": { "lat": 37.320202, "lng": -85.039702 },
     "coverage": 
     {
-       "Kentucky": ""
+       "Kentucky":[
+        "Adair", "Allen", "Anderson", "Barren", "Bath", "Bell", "Boone", 
+        "Bourbon", "Boyd", "Boyle", "Bracken", "Breathitt", "Breckinridge", 
+        "Bullitt", "Butler", "Caldwell", "Calloway", "Campbell", "Carroll", 
+        "Carter", "Casey", "Christian", "Clark", "Clay", "Clinton", 
+        "Crittenden", "Cumberland", "Daviess", "Edmonson", "Elliott", "Estill", 
+        "Fayette", "Fleming", "Floyd", "Franklin", "Gallatin", "Garrard", 
+        "Grant", "Graves", "Grayson", "Green", "Greenup", "Hancock", "Hardin", 
+        "Harlan", "Harrison", "Hart", "Henderson", "Henry", "Hopkins", 
+        "Jackson", "Jefferson", "Jessamine", "Johnson", "Kenton", "Knott", 
+        "Knox", "LaRue", "Laurel", "Lawrence", "Lee", "Leslie", "Letcher", 
+        "Lewis", "Lincoln", "Livingston", "Logan", "Lyon", "Madison", 
+        "Magoffin", "Marion", "Marshall", "Martin", "Mason", "McCreary", 
+        "McLean", "Meade", "Menifee", "Mercer", "Metcalfe", "Monroe", 
+        "Montgomery", "Morgan", "Muhlenberg", "Nelson", "Nicholas", "Ohio", 
+        "Oldham", "Owen", "Owsley", "Pendleton", "Perry", "Pike", "Powell", 
+        "Pulaski", "Robertson", "Rockcastle", "Rowan", "Russell", "Scott", 
+        "Shelby", "Simpson", "Spencer", "Taylor", "Todd", "Trigg", "Trimble", 
+        "Union", "Warren", "Washington", "Wayne", "Webster", "Whitley", 
+        "Wolfe", "Woodford"
+      ]
     }
   },
   {
     "name": "256 ROOFING&EXTERIOR PROD. SERVICES.",
     "country": "USA",
-    "region": 
+    "region":,
     "state": "Ohio"
   },
   {
@@ -300,8 +320,8 @@
     "centroid": { "lat": 45.789340, "lng": -96.708867 },
     "coverage":  
     { 
-      "Minnesota": "ALL"
-      "North Dakota": "ALL"
+      "Minnesota": "ALL",
+      "North Dakota": "ALL",
       "South Dakota": "ALL"
     }
   },
@@ -312,7 +332,7 @@
     "centroid": { "lat": 34.671869, "lng": -79.645512 },
     "coverage": 
     { 
-      "North Carolina": "ALL"
+      "North Carolina": "ALL",
       "South Carlina":  "ALL"
     }
   },
@@ -323,7 +343,7 @@
     "centroid" { "lat": 34.280766, "lng": -84.462830 },
     "coverage": 
     {
-      "Tennessee": "ALL"
+      "Tennessee": "ALL",
       "Georgia": "ALL"
   },
   {
@@ -373,8 +393,8 @@
     "coverage": { "lat": 45.718259, "lng": -120.300458 },
     "coverage": 
     {
-      "Washington": "ALL"
-      "Oregon": "ALL"
+      "Washington": "ALL",
+      "Oregon": "ALL",
       "Alaska": "ALL"
     }
   },
@@ -385,7 +405,7 @@
     "centroid": { "lat": 39.058578, "lng": -116.282608 },
     "coverage": 
     {
-      "Hawaii": "ALL"
+      "Hawaii": "ALL",
       "Nevada": "ALL"
     }
   },
@@ -396,7 +416,7 @@
     "centroid": { "lat": 42.169051, "lng": -112.879875 },
     "coverage": 
     {
-      "Utah": "ALL"
+      "Utah": "ALL",
       "Idaho": "ALL"
     }
   },
@@ -407,8 +427,8 @@
     "centroid": { "lat": 42.966410, "lng": -107.041094 },
     "coverage": 
     {
-      "Montana": "ALL"
-      "Wyoming": "ALL"
+      "Montana": "ALL",
+      "Wyoming": "ALL",
       "Colorado": "ALL"
     }
   },
