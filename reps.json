@@ -2,7 +2,7 @@
   {
     "name": "262 RIVERSIDE SALES",
     "country": "USA",
-    "region": "Southeastern USA"
+    "region": "Southeastern USA",
     "centroid": {"lat": 29.563902 , "lng": -82.435813},
     "coverage": 
     {
@@ -25,7 +25,7 @@
     {
     "name": "236 THE SCARLETTE GROUP",
     "country": "USA",
-    "region": "Southeastern USA"
+    "region": "Southeastern USA",
     "centroid": {"lat": 27.498527, "lng": -82.306778},
     "coverage": 
   {
@@ -35,7 +35,7 @@
     {
     "name": "237 JC MOONS & ASSOCIATES",
     "country": "USA",
-    "region": "Southeastern USA"
+    "region": "Southeastern USA",
     "centroid": {"lat": 25.780107, "lng": -80.790667},
     "coverage": 
   {
@@ -45,8 +45,8 @@
     {
     "name": "257 COMMERCIAL ROOFING SOLUTIONS LLC",
     "country": "USA",
-    "region": "Mid-Atlantic USA"
-    "centroid": { "lat": 40.341311, "lng": -74.465332 }
+    "region": "Mid-Atlantic USA",
+    "centroid": { "lat": 40.341311, "lng": -74.465332 },
     "coverage": 
   {
     "New Jersey": "ALL"
@@ -55,8 +55,8 @@
   {
     "name": "E258",
     "country": "USA",
-    "region": "South Central"
-    "centroid": { "lat": 34.755153, "lng": -101.469727 }
+    "region": "South Central",
+    "centroid": { "lat": 34.755153, "lng": -101.469727 },
     "coverage": 
     { 
       "Texas": [ "Armstrong" , "Carson", "Dallam", "Deaf Smith", "Gray", "Hansford", "Hartley", "Hemphill", "Hutchinson", "Lipscomb", "Moore", "Ochiltree", "Oldham", "Potter", "Randall", "Roberts", "Tyler", "Sherman", "Briscoe", "Childress", "Collingsworth", "Cottle", "Dickens", "Donley", "Foard", "Hall", "Hardeman", "King", "Knox", "Motley", "Wheeler", "Bailey", "Castro", "Cochran", "Crosby", "Dawson", "Floyd", "Gaines", "Garza", "Hale", "Hockley", "Lamb", "Lubbock", "Lynn", "Parmer", "Swisher", "Terry", "Yoakum", "Borden", "Callahan", "Fisher", "Haskell", "Howard", "Jones", "Kent", "Mitchell", "Nolan", "Scurry", "Shackelford", "Stonewall", "Taylor", "Archer", "Baylor", "Clay", "Cooke", "Montague", "Throckmorton", "Wichita", "Wilbarger", "Young", "Delta", "Fannin", "Franklin", "Grayson", "Hopkins", "Hunt", "Lamar", "Rains", "Red River", "Bowie", "Camp", "Cass", "Harrison", "Marion", "Morris", "Panola", "Titus", "Upshur", "Anderson", "Cherokee", "Gregg", "Henderson", "Rusk", "Smith", "Van Zandt", "Wood", "Angelina", "Houston", "Nacogdoches", "Polk", "Sabine", "San Augustine", "San Jacinto", "Shelby", "Trinity", "Erath", "Hood", "Jack", "Johnson", "Palo Pinto", "Parker", "Somervell", "Tarrant", "Wise", "Collin", "Dallas", "Denton", "Ellis", "Kaufman", "Navarro", "Rockwall", "Bell", "Bosque", "Coryell", "Falls", "Hamilton", "Hill", "Limestone", "McLennan", "Andrews", "Martin", "Loving", "Winkler", "Ector", "Midland"]
@@ -82,7 +82,7 @@
     "name": "20 B.E.S.T INC",
     "country": "USA",
     "region": "Mid-Atlantic",
-    "centroid": { "lat": 40.703025, "lng": -73.624878 }
+    "centroid": { "lat": 40.703025, "lng": -73.624878 },
     "coverage": 
     {
     "New York": ["Delaware", "Sullivan", "Ulster", "Rockland", "Westchester","Nassau","Suffolk","Bronx", "Kings","New York","Richmond","Queens","Dutchess","Orange","Putnam" ]
@@ -92,7 +92,7 @@
     "name": "250 ROOFING INNOVATIONS LLC",
     "country": "USA",
     "region": "Mid-Atlantic",
-    "centroid": { "lat": 43.076913, "lng": -75.975935 }
+    "centroid": { "lat": 43.076913, "lng": -75.975935 },
     "coverage": 
     {
     "New York": ["Albany", "Columbia", "Fulton", "Greene", "Montgomery", "Rensselaer", "Saratoga", "Schenectady", "Schoharie", "Warren", "Washington", "Franklin", "Clinton", "Essex", "Hamilton", "Herkimer", "Jefferson", "Lewis", "Oneida", "Oswego", "St. Lawrence", "Broome", "Cayuga", "Chenango", "Cortland", "Madison", "Onondaga", "Otsego", "Tioga", "Tompkins", "Chemung", "Genesee", "Livingston", "Monroe", "Ontario", "Schuyler", "Seneca", "Steuben", "Wayne", "Yates", "Allegany", "Cattaraugus", "Chautauqua", "Erie", "Niagara", "Orleans", "Wyoming", "Dutchess", "Orange", "Putnam"]
@@ -102,7 +102,7 @@
     "name": "238 KENEFIC SALES ASSOCIATES",
     "country": "USA",
     "region": "Mid-Atlantic",
-    "centroid": { "lat": 40.946714, "lng": -80.029783 }
+    "centroid": { "lat": 40.946714, "lng": -80.029783 },
     "coverage": 
     {
     "Pennysylvania": ["Bedford", "Blair", "Cambria", "Lawrence", "McKean", "Mercer", "Cameron", "Clarion", "Clearfield", "Potter", "Crawford", "Elk", "Erie", "Forest", "Venango", "Warren", "Jefferson", "Allegheny", "Armstrong", "Beaver", "Butler", "Fayette", "Washington", "Greene", "Westmoreland", "Indiana"]
@@ -112,7 +112,7 @@
     "name": "255 INNOVATIVE BUILDING SOLUTION INC",
     "country": "USA",
     "region": "Mid-Atlantic",
-    "centroid": { "lat": 38.749799 , "lng": -78.044076 }
+    "centroid": { "lat": 38.749799 , "lng": -78.044076 },
     "coverage": 
     { 
       "Virginia": [ "Alexandria", "Arlington", "Clarke", "Fairfax", "Frederick", "Prince William" ]
@@ -123,7 +123,7 @@
     "name": "243 MRC SOLUTIONS LLC",
     "country": "USA",
     "region": "Mid-Atlantic"
-    "centroid": { "lat": 43.866218, "lng": }
+    "centroid": { "lat": 43.866218, "lng": },
     "coverage": 
     {
       "Connecticut": "ALL"
@@ -137,7 +137,7 @@
   {
     "name": "226 THE GEMROI COMPANY",
     "country": "USA",
-    "centroid": { "lat": 37.26531, "lng": -77.662137 }
+    "centroid": { "lat": 37.26531, "lng": -77.662137 },
     "region": "Mid-Atlantic",
     "coverage": 
   {
@@ -147,16 +147,16 @@
   {
     "name": "Josh Hissiom",
     "country": "USA",
-    "centroid": { "lat": 38.865375, "lng": -80.183602 }
-    "region": "Appalachian"
+    "centroid": { "lat": 38.865375, "lng": -80.183602 },
+    "region": "Appalachian",
     "coverage": 
     { "West Virginia": "ALL" }
   },
   {
     "name": "157 B.R.A.V. ENTERPRISES",
     "country": "USA",
-    "centroid": { "lat": 43.261206, "lng": -84.715369 }
-    "region": "Midwest"
+    "centroid": { "lat": 43.261206, "lng": -84.715369 },
+    "region": "Midwest",
     "coverage": 
     {
       "Michigan": "ALL"
@@ -165,8 +165,8 @@
   {
     "name": "206 DIVERSIFIED RFG SOLUTIONS INC",
     "country": "USA",
-    "region": " Midwestern"
-    "centroid": { "lat": 44.684277, "lng": -89.889725 }
+    "region": " Midwestern",
+    "centroid": { "lat": 44.684277, "lng": -89.889725 },
     "coverage": 
     {
     "Wisconsin": "ALL"
@@ -193,7 +193,7 @@
     "name": "267 WALCO LLC",
     "country": "USA",
     "region": "Southern",
-    "centroid": { "lat": 35.137879, "lng": -94.635822 }
+    "centroid": { "lat": 35.137879, "lng": -94.635822 },
     "coverage": 
     {
       "Oklahoma": "ALL"
@@ -203,8 +203,8 @@
   {
     "name": "218 FIVE STAR PRODUCTS INC",
     "country": "USA",
-    "region": "Midwestern"
-    "centroid": { "lat": 40.480381 , "lng": -86.286355 }
+    "region": "Midwestern",
+    "centroid": { "lat": 40.480381 , "lng": -86.286355 },
     "counties": 
     {
     "Indiana": [
@@ -229,7 +229,7 @@
     "name": "143 DIVISION 7 SALES INC",
     "country": "USA",
     "region": "South Central",
-    "centroid": { "lat": 38.411500, "lng": -94.658877 }
+    "centroid": { "lat": 38.411500, "lng": -94.658877 },
     "coverage": 
     {
       "Missouri": "ALL"
@@ -241,7 +241,7 @@
     "name": "254 ENGINEERED SYSTEMS",
     "country": "USA",
     "region": " East South Central",
-    "centroid": { "lat": 37.320202, "lng": -85.039702 }
+    "centroid": { "lat": 37.320202, "lng": -85.039702 },
     "coverage": 
     {
        "Kentucky": ""
@@ -279,7 +279,7 @@
     "name": "248 DIVISION 7 SALES INC.",
     "country": "USA",
     "region": "Midwestern",
-    "centroid": { "lat": 40.382342, "lng": -89.346566 }
+    "centroid": { "lat": 40.382342, "lng": -89.346566 },
     "coverage":  {
       "Illinois": [
         "La Salle", "Whiteside", "Henry", "Lee", "Bureau", "Jo Daviess", "Carroll", "Mercer", "Putnam",
@@ -297,7 +297,7 @@
     "name": "247  SHERMACH SALES LLC",
     "country": "USA",
     "region": "Northern",
-    "centroid": { "lat": 45.789340, "lng": -96.708867 }
+    "centroid": { "lat": 45.789340, "lng": -96.708867 },
     "coverage":  
     { 
       "Minnesota": "ALL"
@@ -309,7 +309,7 @@
     "name": "142 W.R. WALSH INC",
     "region": "Southeastern",
     "country": "USA",
-    "centroid": { "lat": 34.671869, "lng": -79.645512 }
+    "centroid": { "lat": 34.671869, "lng": -79.645512 },
     "coverage": 
     { 
       "North Carolina": "ALL"
@@ -320,7 +320,7 @@
     "name": "178 LAGOD CONSTRUCTION PRODUCTS",
     "country": "USA",
     "region": "Southeastern",
-    "centroid" { "lat": 34.280766, "lng": -84.462830 }
+    "centroid" { "lat": 34.280766, "lng": -84.462830 },
     "coverage": 
     {
       "Tennessee": "ALL"
@@ -330,7 +330,7 @@
     "name": "ALI ANGLE",
     "country": "USA",
     "region": "Southwestern",
-    "centroid": { "lat": 34.731875, "lng": -112.144162 }
+    "centroid": { "lat": 34.731875, "lng": -112.144162 },
     "coverage": 
     {
       "Arizona": "ALL"
@@ -340,7 +340,7 @@
     "name": "269 AT WATERPROOFING SOLUTIONS",
     "country": "USA",
     "region": "Western",
-    "centroid": { "lat": 34.442752, "lng": -116.835946 }
+    "centroid": { "lat": 34.442752, "lng": -116.835946 },
     "coverage": 
     {
     "California": ["Santa Barbara", "Santa Cruz", "Ventura", "Fresno", "Inyo", "Kern", "Kings", "Tulare", "Riverside", "San Bernardino", "Los Angeles", "Orange", "Imperial", "San Diego"]
@@ -360,7 +360,7 @@
     "name": "201 ROOFING SOLUTIONS GROUP (W)",
     "country": "USA",
     "region": "Western",
-    "centroid": { "lat": 34.442752, "lng": -106.244733 }
+    "centroid": { "lat": 34.442752, "lng": -106.244733 },
     "coverage": 
     {
       "New Mexico": "ALL"
@@ -370,7 +370,7 @@
     "name": "180 WELLER ASSOCIATES",
     "country": "USA",
     "region": "Pacific Northwest",
-    "coverage": { "lat": 45.718259, "lng": -120.300458 }
+    "coverage": { "lat": 45.718259, "lng": -120.300458 },
     "coverage": 
     {
       "Washington": "ALL"
@@ -404,7 +404,7 @@
     "name": "246 DJS ENTERPRISES INC",
     "country": "USA",
     "region": "Mountain West",
-    "centroid": { "lat": 42.966410, "lng": -107.041094 }
+    "centroid": { "lat": 42.966410, "lng": -107.041094 },
     "coverage": 
     {
       "Montana": "ALL"
@@ -419,7 +419,7 @@
   },
   {
     "name": "DREW NEWMAN",
-    "country": "Canada"
+    "country": "Canada",
     "province": ["Alberta, Manitoba, British Columbia, Saskatchewan"]
   },
   {
