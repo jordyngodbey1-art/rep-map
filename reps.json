@@ -274,8 +274,8 @@
     "centroid": { "lat": 41.948294, "lng": -96.205045 },
     "coverage": 
     {
-      "Iowa": "ALL"
-      "Nebraska": "ALL"
+      "Iowa": "ALL",
+      "Nebraska": "ALL",
       "Illinois": "Rock Island"
     }
   },
