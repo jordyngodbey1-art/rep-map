@@ -130,24 +130,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // Style counties polygons
       L.geoJson(countyData, {
-        style: (f) => {
-          const sProps = f.properties;
-          const s = clean(sProps.STATE_NAME || sProps.state || "");
-          const c = clean(sProps.NAME || sProps.name || "");
-          const owner = territoryLookup[`state-wide-${s}`] || territoryLookup[`${s}-${c}`];
-          if (owner) {
-            const col = getRepColor(owner.name);
-            return {
-              fillColor: col,
-              fillOpacity: 0.4,
-              color: col,
-              weight: 2,
-              opacity: 1,
-              dashArray: '4,2'
-            };
-          }
-          return { fillColor: '#fff', fillOpacity: 0, color: '#ccc', weight: 1, opacity: 0.5 };
-        },
+    style: (f) => {
+  const sProps = f.properties;
+  const s = clean(sProps.STATE_NAME || sProps.state || "");
+  const c = clean(sProps.NAME || sProps.name || "");
+  const owner = territoryLookup[`state-wide-${s}`] || territoryLookup[`${s}-${c}`];
+  if (owner) {
+    const col = getRepColor(owner.name);
+    console.log('Polygon:', c, 'Owner:', owner.name, 'Color:', col);
+return {
+  fillColor: '#ff0000', // red
+  fillOpacity: 0.4,
+  color: '#ff0000',
+  weight: 2,
+  opacity: 1,
+  dashArray: '4,2'
+};
+  }
+  return { fillColor: '#fff', fillOpacity: 0, color: '#ccc', weight: 1, opacity: 0.5 };
+},
         onEachFeature: (f, l) => {
           const s = (f.properties.STATE_NAME || f.properties.state || "").toString();
           const c = (f.properties.NAME || f.properties.name || "").toString();
