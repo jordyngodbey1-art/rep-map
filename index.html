@@ -1,139 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KARNAK | Territory Locator</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <style>
-        :root { --k-red: #ce2029; }
-        html, body { height: 100%; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #ffffff; }
-        #header { background: white; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 4px solid var(--k-red); z-index: 1001; position: relative; }
-        .logo-text { font-size: 1.8rem; font-weight: 900; color: var(--k-red); letter-spacing: 3px; text-transform: uppercase; margin: 0; }
-        #status { font-size: 10px; color: #999; font-weight: bold; text-transform: uppercase; margin-top: 4px; }
-        #rep-search { padding: 8px 15px; border: 1px solid #ddd; border-radius: 20px; width: 220px; }
-        #map { height: calc(100vh - 75px); width: 100%; background: #fdfdfd; }
-        .territory-label { background: rgba(255, 255, 255, 0.9) !important; border: 1px solid #444 !important; border-radius: 2px; padding: 1px 4px; font-weight: 700; font-size: 8px; white-space: wrap; pointer-events: none; text-align: center; }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>KARNAK | Territory Locator</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  :root { --k-red: #ce2029; }
+  html, body { height: 100%; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #fff; }
+  #header { background: white; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 4px solid var(--k-red); z-index: 1001; position: relative; }
+  .logo-text { font-size: 1.8rem; font-weight: 900; color: var(--k-red); letter-spacing: 3px; text-transform: uppercase; margin: 0; }
+  #status { font-size: 10px; color: #999; font-weight: bold; text-transform: uppercase; margin-top: 4px; }
+  #rep-search { padding: 8px 15px; border: 1px solid #ddd; border-radius: 20px; width: 220px; }
+  #map { height: calc(100vh - 75px); width: 100%; background: #fdfdfd; position: relative; }
+  /* Legend styles */
+  #legend {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(255,255,255,0.9);
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  #legend h4 {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .color-box {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    border: 1px solid #999;
+  }
+  .territory-label { background: rgba(255, 255, 255, 0.9) !important; border: 1px solid #444 !important; border-radius: 2px; padding: 1px 4px; font-weight: 700; font-size: 8px; white-space: nowrap; pointer-events: none; text-align: center; }
+</style>
 </head>
 <body>
-
 <div id="header">
-    <div class="logo-box">
-        <div class="logo-text">KARNAK</div>
-        <div id="status">Syncing Data...</div>
-    </div>
-    <input type="text" id="rep-search" placeholder="Search Representative...">
+  <div class="logo-box">
+    <div class="logo-text">KARNAK</div>
+    <div id="status">Syncing Data...</div>
+  </div>
+  <input type="text" id="rep-search" placeholder="Search Representative...">
 </div>
 <div id="map"></div>
+<div id="legend">
+  <h4>Coverage Legend</h4>
+  <div class="legend-item"><div class="color-box" style="background:#ff0000"></div>Rep 1</div>
+  <div class="legend-item"><div class="color-box" style="background:#00ff00"></div>Rep 2</div>
+  <div class="legend-item"><div class="color-box" style="background:#0000ff"></div>Rep 3</div>
+  <!-- Add more as needed -->
+</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const status = document.getElementById('status');
-        const map = L.map('map').setView([39.8, -98.5], 4);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png').addTo(map);
+document.addEventListener('DOMContentLoaded', function() {
+  const status = document.getElementById('status');
+  const map = L.map('map').setView([39.8, -98.5], 4);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>'
+  }).addTo(map);
 
-        const repColors = {};
-        const territoryLookup = {};
-        const repMarkers = {}; 
+  const repColors = {}; // store rep name to color
+  const territoryLookup = {};
+  const repMarkers = {};
 
-        function getRepColor(name) {
-            if (!name) return 'transparent';
-            if (!repColors[name]) {
-                const count = Object.keys(repColors).length;
-                const hue = (count * 137.5) % 360; 
-                repColors[name] = `hsl(${hue}, 70%, 45%)`;
+  // Generate distinct colors for reps
+  function getRepColor(name) {
+    if (!name) return '#ccc';
+    if (!repColors[name]) {
+      const hue = Object.keys(repColors).length * 137.5 % 360;
+      repColors[name] = `hsl(${hue}, 70%, 50%)`;
+    }
+    return repColors[name];
+  }
+
+  // Clean string for keys
+  function clean(str) {
+    if (!str) return "";
+    return str.toString().toLowerCase()
+      .replace(/\bcounty\b/g, "")
+      .replace(/\bparish\b/g, "")
+      .trim();
+  }
+
+  async function initMap() {
+    try {
+      const [repReq, countyReq, stateReq] = await Promise.all([
+        fetch('reps.json'),
+        fetch('counties.json'),
+        fetch('states.json')
+      ]);
+      if (!repReq.ok || !countyReq.ok || !stateReq.ok) throw new Error("Check file names/paths");
+      const reps = await repReq.json();
+      const countyData = await countyReq.json();
+      const stateData = await stateReq.json();
+
+      // Store reps and create markers
+      reps.forEach(rep => {
+        if (rep.coverage) {
+          Object.keys(rep.coverage).forEach(st => {
+            const sKey = clean(st);
+            const val = rep.coverage[st];
+            if (val === "ALL" || val === "all") {
+              territoryLookup[`state-wide-${sKey}`] = rep;
+            } else {
+              const list = Array.isArray(val) ? val : [val];
+              list.forEach(c => {
+                if (c) territoryLookup[`${sKey}-${clean(c)}`] = rep;
+              });
             }
-            return repColors[name];
+          });
         }
-
-        // Clean name function (Removes "County", "Parish", and extra spaces)
-        function clean(str) {
-            if (!str) return "";
-            return str.toString().toLowerCase()
-                      .replace(/\bcounty\b/g, "")
-                      .replace(/\bparish\b/g, "")
-                      .trim();
+        if (rep.centroid && rep.centroid.lat) {
+          const marker = L.marker([rep.centroid.lat, rep.centroid.lng], {
+            icon: L.divIcon({ className: 'territory-label', html: rep.name, iconSize: [90, 18] })
+          }).bindPopup(`<b>Rep: ${rep.name}</b>`).addTo(map);
+          repMarkers[rep.name.toLowerCase()] = { marker, latlng: [rep.centroid.lat, rep.centroid.lng] };
         }
+      });
 
-        async function initMap() {
-            try {
-                const [repReq, countyReq, stateReq] = await Promise.all([
-                    fetch('reps.json'),
-                    fetch('counties.json'),
-                    fetch('states.json')
-                ]);
-
-                if (!repReq.ok || !countyReq.ok || !stateReq.ok) throw new Error("Check file names/paths");
-
-                const reps = await repReq.json();
-                const countyData = await countyReq.json();
-                const stateData = await stateReq.json();
-
-                reps.forEach(rep => {
-                    if (rep.coverage) {
-                        Object.keys(rep.coverage).forEach(st => {
-                            const sKey = clean(st);
-                            let val = rep.coverage[st];
-                            if (val === "ALL" || val === "all") {
-                                territoryLookup[`state-wide-${sKey}`] = rep;
-                            } else {
-                                let list = Array.isArray(val) ? val : [val];
-                                list.forEach(c => { 
-                                    if (c) territoryLookup[`${sKey}-${clean(c)}`] = rep; 
-                                });
-                            }
-                        });
-                    }
-                    if (rep.centroid && rep.centroid.lat) {
-                        const marker = L.marker([rep.centroid.lat, rep.centroid.lng], {
-                            icon: L.divIcon({ className: 'territory-label', html: rep.name, iconSize: [90, 18] })
-                        }).bindPopup(`<b>Rep: ${rep.name}</b>`).addTo(map);
-                        repMarkers[rep.name.toLowerCase()] = { marker, latlng: [rep.centroid.lat, rep.centroid.lng] };
-                    }
-                });
-
-                L.geoJson(countyData, {
-                    style: (f) => {
-                        const sProps = f.properties;
-                        const s = clean(sProps.STATE_NAME || sProps.state || sProps.State || sProps.name || "");
-                        const c = clean(sProps.NAME || sProps.name || sProps.county || "");
-                        
-                        const owner = territoryLookup[`state-wide-${s}`] || territoryLookup[`${s}-${c}`];
-                        
-                        if (owner) {
-                            const col = getRepColor(owner.name);
-                            return { fillColor: col, fillOpacity: 0.4, color: col, weight: 2.2, opacity: 1 };
-                        }
-                        return { fillColor: '#fff', fillOpacity: 0, color: '#ccc', weight: 0.5, opacity: 0.2 };
-                    },
-                    onEachFeature: (f, l) => {
-                        const s = (f.properties.STATE_NAME || f.properties.state || "").toString();
-                        const c = (f.properties.NAME || f.properties.name || "").toString();
-                        const owner = territoryLookup[`state-wide-${clean(s)}`] || territoryLookup[`${clean(s)}-${clean(c)}`];
-                        if (owner) {
-                            l.bindPopup(`<b>${c}, ${s}</b><br>Rep: ${owner.name}`);
-                            l.on('mouseover', () => l.setStyle({ fillOpacity: 0.7, weight: 4 }));
-                            l.on('mouseout', () => {
-                                const col = getRepColor(owner.name);
-                                l.setStyle({ fillOpacity: 0.4, weight: 2.2 });
-                            });
-                        }
-                    }
-                }).addTo(map);
-
-                L.geoJson(stateData, { style: { color: '#000', weight: 2.5, fillOpacity: 0, interactive: false } }).addTo(map);
-                status.innerText = reps.length + " Reps Loaded";
-
-            } catch (err) {
-                status.innerText = "Error: " + err.message;
-                console.error(err);
-            }
+      // Style counties polygons
+      L.geoJson(countyData, {
+        style: (f) => {
+          const sProps = f.properties;
+          const s = clean(sProps.STATE_NAME || sProps.state || "");
+          const c = clean(sProps.NAME || sProps.name || "");
+          const owner = territoryLookup[`state-wide-${s}`] || territoryLookup[`${s}-${c}`];
+          if (owner) {
+            const col = getRepColor(owner.name);
+            return {
+              fillColor: col,
+              fillOpacity: 0.4,
+              color: col,
+              weight: 2,
+              opacity: 1,
+              dashArray: '4,2'
+            };
+          }
+          return { fillColor: '#fff', fillOpacity: 0, color: '#ccc', weight: 1, opacity: 0.5 };
+        },
+        onEachFeature: (f, l) => {
+          const s = (f.properties.STATE_NAME || f.properties.state || "").toString();
+          const c = (f.properties.NAME || f.properties.name || "").toString();
+          const owner = territoryLookup[`state-wide-${clean(s)}`] || territoryLookup[`${clean(s)}-${clean(c)}`];
+          if (owner) {
+            l.bindPopup(`<b>${c}, ${s}</b><br>Rep: ${owner.name}`);
+            l.on('mouseover', () => l.setStyle({ fillOpacity: 0.7, weight: 3 }));
+            l.on('mouseout', () => {
+              const col = getRepColor(owner.name);
+              l.setStyle({ fillOpacity: 0.4, weight: 2 });
+            });
+          }
         }
-        initMap();
+      }).addTo(map);
+
+      // Style state polygons (if needed)
+      L.geoJson(stateData, {
+        style: { color: '#000', weight: 2.5, fillOpacity: 0, interactive: false }
+      }).addTo(map);
+
+      status.innerText = reps.length + " Reps Loaded";
+
+    } catch (err) {
+      status.innerText = "Error: " + err.message;
+      console.error(err);
+    }
+  }
+
+  initMap();
+
+  // Search functionality
+  document.getElementById('rep-search').addEventListener('input', function() {
+    const query = this.value.trim().toLowerCase();
+
+    Object.values(repMarkers).forEach(({ marker }) => {
+      // Reset icon (if customized)
+      marker.setIcon(L.divIcon({ className: 'territory-label', html: marker.options.icon.options.html, iconSize: [90, 18] }));
     });
+
+    const matchKey = Object.keys(repMarkers).find(name => name.includes(query));
+    if (matchKey) {
+      const rep = repMarkers[matchKey];
+      // Optional: highlight marker
+      rep.marker.setIcon(L.divIcon({ className: 'territory-label', html: rep.marker.options.icon.options.html, iconSize: [90, 18], className: 'highlight' }));
+      map.setView(rep.latlng, 8);
+    }
+  });
+});
 </script>
 </body>
 </html>
